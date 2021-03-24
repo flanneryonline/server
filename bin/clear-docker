@@ -6,16 +6,21 @@ set -e
 
 name=$1
 
-id=$(docker ps -q -f name=$name)
-if [ ! -z "$id" ]
+if [ name = "-a" ]
 then
-    docker stop $id
-fi
+    docker stop $(docker ps -a -q)
+    docker rm $(docker ps -a -q)
+else
+    id=$(docker ps -q -f name=$name)
+    if [ ! -z "$id" ]
+    then
+        docker stop $id
+    fi
 
-id=$(docker ps -aq -f name=$name)
-if [ ! -z "$id" ]
-then
-    docker rm -f $id
+    id=$(docker ps -aq -f name=$name)
+    if [ ! -z "$id" ]
+    then
+        docker rm -f $id
+    fi
 fi
-
 exit 0
