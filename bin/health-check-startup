@@ -7,7 +7,8 @@ set -e
 cont=$1
 
 timeout=60
-while [ "$(docker inspect $cont | jq ".[] .State.Health.Status" | sed 's/"//g')" != "healthy" ]
+state=$(docker inspect $cont | jq ".[] .State.Health.Status" | sed 's/"//g')
+while [ $state != "healthy" && $state != "null"]
 do
     timeout=$((timeout-1))
     sleep 1s
@@ -16,6 +17,8 @@ do
     then
         exit 1
     fi
+
+    state=$(docker inspect $cont | jq ".[] .State.Health.Status" | sed 's/"//g')
 done
 
 exit 0

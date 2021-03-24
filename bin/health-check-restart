@@ -6,7 +6,8 @@ set -e
 
 for cont in $(ls /opt/server/docker)
 do
-    if [ "$(docker inspect $cont | jq ".[] .State.Health.Status" | sed 's/"//g')" != "healthy" ]
+    state=$(docker inspect $cont | jq ".[] .State.Health.Status" | sed 's/"//g')
+    if [ $state != "healthy" && $state != "null" ]
     then
         systemctl restart docker@$cont.service
     fi
