@@ -1,0 +1,19 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp1s0:
+      dhcp4: no
+      dhcp6: no
+    enp4s0:
+      dhcp4: no
+      dhcp6: no
+    enp5s0:
+      dhcp4: no
+      dhcp6: no
+    eno1:
+      dhcp4: no
+      dhcp6: no
+    eno2:
+      dhcp4: no
+      dhcp6: no

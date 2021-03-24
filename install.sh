@@ -29,6 +29,16 @@ boot_disks=$(filter_quotes "$(eval $wt_boot $(whiptail_disks) 2>&1 >/dev/tty)")
 [ "x$fast_disks" = "x" ] && FAST_STORAGE_ENABLED=0
 [ "x$slow_disks" = "x" ] && SLOW_STORAGE_ENABLED=0
 
+wt_main_net='whiptail --title "Choose one or more interfaces for main network" --checklist "Multiple require LACP setup at switch" 0 10 0 '
+wt_vpn_net='whiptail --title "Choose one or more interfaces for vpn network" --checklist "Multiple require LACP setup at switch" 0 10 0 '
+wt_media_net='whiptail --title "Choose one or more interfaces for media network" --checklist "Multiple require LACP setup at switch" 0 10 0 '
+wt_other_net='whiptail --title "Choose one or more interfaces for other network" --checklist "Multiple require LACP setup at switch" 0 10 0 '
+
+net_list_main=$(filter_quotes "$(eval $wt_main_net $(whiptail_net main_net media_net vpn_net) 2>&1 >/dev/tty)")
+net_list_vpn=$(filter_quotes "$(eval $wt_main_net $(whiptail_net $net_list_main media_net vpn_net) 2>&1 >/dev/tty)")
+net_list_media=$(filter_quotes "$(eval $wt_main_net $(whiptail_net $net_list_main $net_list_vpn media_net) 2>&1 >/dev/tty)")
+net_list_other=$(filter_quotes "$(eval $wt_main_net $(whiptail_net $net_list_main $net_list_vpn $net_list_media) 2>&1 >/dev/tty)")
+
 #whiptail --yes-button "Confirm" --no-button "Cancel" --title "Confirm Info" --yesno "$(wt_confirm)" 0 10
 #errorcheck && exit 1
 
