@@ -1,0 +1,6 @@
+[Unit]
+Description=FlanneryOnline VPN Services
+ConditionPathExistsGlob=/opt/server/bin/docker/media/vpn/*
+After=multi-user.target
+[Install]
+WantedBy=fods-media.target

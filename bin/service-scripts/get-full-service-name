@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+exec 2> >(logger -s -t $(basename $0))
+
+set -e
+
+use_sudo=
+if [ $UID -ne 0 ]; then
+    use_sudo="sudo"
+fi
+
+service=${1:-blank}
+type=${2:-$($use_sudo /opt/server/bin/service-scripts/get-service-type $service)}
+network=${3:-$($use_sudo /opt/server/bin/service-scripts/get-service-network $service)}
+type=${type:-blank}
+network=${network:-blank}
+
+if [ $service = "blank" ]
+then
+    echo "service name is required."
+    exit 1
+fi
+
+if [ $type = "blank" ]
+then
+    echo "no type found for service $service."
+    exit 1
+fi
+
+if [ $network = "blank" ]
+then
+    echo "no network found for service $service."
+    exit 1
+fi
+
+if ! $use_sudo /opt/server/bin/service-scripts/service-check
+then
+    echo "$service is not a valid service."
+    exit 1
+fi
+
+printf "fods@$type-$network-$service.service"
+
+exit 0

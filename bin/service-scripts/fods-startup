@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+exec 2> >(logger -s -t $(basename $0))
+
+set -e
+
+docker_name=$1
+
+[ $docker_name = "vpn" ] && /opt/server/service-scripts/fods-vpn && exit 0
+
+type=${docker_name%%-*}
+docker_name=${docker_name#*-}
+network=${docker_name%%-*}
+service=${docker_name#*-}
+
+/opt/server/bin/service-scripts/fods-network $network $service
+
+/opt/server/docker/$type/$service
+
+exit 0

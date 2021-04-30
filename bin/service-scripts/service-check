@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+exec 2> >(logger -s -t $(basename $0))
+
+set -e
+
+check_service=$1
+
+for type in /opt/server/docker/*
+do
+    if [ ! -f $type ]
+    then
+        for network in /opt/server/docker/$type/*
+        do
+            if [ ! -f $network ]
+            then
+                for service in /opt/server/docker/$type/$network/*
+                do
+                    if [ -f $service ]
+                    then
+                        [ $service = $check_service ] && exit 0
+                    fi
+                done
+            fi
+        done
+        for service in /opt/server/docker/$type/*
+        do
+            if [ -f $service ]
+            then
+                [ $service = $check_service ] && exit 0
+            fi
+        done
+    fi
+done
+
+exit 1
