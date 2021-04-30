@@ -1,8 +1,0 @@
-[Unit]
-Description=Docker Healthcheck Service
-Requires=docker.service
-After=docker.service
-
-[Service]
-Type=oneshot
-ExecStart=/opt/server/bin/health-check-restart

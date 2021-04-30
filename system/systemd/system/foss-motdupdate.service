@@ -8,4 +8,4 @@ Type=oneshot
 WorkingDirectory=/tmp
 User=root
 Group=root
-ExecStart=/opt/server/bin/motd-update
+ExecStart=/opt/server/bin/service-scripts/motd-update
