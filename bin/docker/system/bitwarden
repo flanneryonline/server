@@ -10,10 +10,6 @@ docker pull bitwardenrs/server
 docker create \
 --name=bitwarden \
 -p 80:80 \
---health-cmd="which which 2>&1" \
---health-interval=5s \
---health-start-period=5s \
---health-timeout=2s \
 -e SIGNUPS_ALLOWED=false \
 -e INVITATIONS_ALLOWED=false \
 -e DOMAIN=https://password.flanneryonline.com \

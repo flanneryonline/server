@@ -1,0 +1,20 @@
+
+#!/usr/bin/env bash
+
+set -e
+
+SERVER_INSTALL=${SERVER_INSTALL:-/opt/server}
+. "$SERVER_INSTALL/environment"
+
+docker pull homeassistant/home-assistant:stable
+
+docker create \
+--name homeassistant \
+--health-cmd="curl --max-time 5 -Lsf 'http://127.0.0.1:8123' >/dev/null" \
+--health-interval=5s \
+--health-start-period=5s \
+--health-timeout=5s \
+-v /etc/localtime:/etc/localtime:ro \
+-v /$STORAGE_CONFIG_DIR/homeassistant:/config \
+--network=host \
+homeassistant/home-assistant:stable

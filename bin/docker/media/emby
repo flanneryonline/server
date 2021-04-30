@@ -9,11 +9,6 @@ docker pull emby/embyserver
 
 docker create \
 --name=emby \
---net=host \
---health-cmd="ps -o user -e | grep 1001 >/dev/null" \
---health-interval=5s \
---health-start-period=15s \
---health-timeout=2s \
 -e UID=$DOCKER_PUID -e GID=$DOCKER_PGID \
 -v $STORAGE_CONFIG_DIR/emby:/config \
 -v $STORAGE_MEDIA_DIR:/media \
