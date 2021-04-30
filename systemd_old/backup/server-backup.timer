@@ -1,8 +1,0 @@
-[Unit]
-Description=Timer for Backup Service
-
-[Timer]
-OnUnitInactiveSec=6h
-
-[Install]
-WantedBy=timers.target

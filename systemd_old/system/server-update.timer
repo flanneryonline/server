@@ -1,8 +1,0 @@
-[Unit]
-Description=Timer for Update Server Service
-
-[Timer]
-OnCalendar=daily
-
-[Install]
-WantedBy=timers.target
