@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+exec 2> >(logger -s -t $(basename $0))
+
+set -e
+
+SERVER_INSTALL=${SERVER_INSTALL:-/opt/server}
+. "$SERVER_INSTALL/include"
+
+setting=$1
+[ -e "/etc/server/settings/$setting" ] && echo "$(cat /etc/server/settings/$setting)" && exit 0
+echoerr "no server setting named $setting" && exit 1

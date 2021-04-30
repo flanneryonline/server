@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+exec 2> >(logger -s -t $(basename $0))
+
+set -e
+
+#gets a single /dev/sdx
+#link based on the /dev/disk/by-xx link provided
+#
+#parameters:
+#   1 - base dev link ex: "/dev/disk/by-id/scsi-12315162363"
+
+udevadm info -q all $1 | grep DEVNAME | sed 's/ /\n/g' | grep /dev/  | sed 's/DEVNAME=//'
+
+exit 0

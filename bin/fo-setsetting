@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+exec 2> >(logger -s -t $(basename $0))
+
+set -e
+
+setting=$1
+[ ! -d "/etc/server/settings" ] && mkdir -p "/etc/server/settings"
+echo "$2" > "/etc/server/settings/$setting"
+chmod 600 "/etc/server/settings/$setting"
+exit 0
