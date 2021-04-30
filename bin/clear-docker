@@ -6,6 +6,8 @@ set -e
 
 name=$1
 
+[ $name = "" ] && echo "Must provide name of container or '-a' for all containers." && exit 0
+
 if [ name = "-a" ]
 then
     docker stop $(docker ps -a -q)
