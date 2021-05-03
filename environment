@@ -24,6 +24,6 @@ SERVER_FQDN=hostserver.flanneryonline.com
 DOCKER_PUID=1001
 DOCKER_PGID=1001
 SERVER_DIST=ubuntu
-SERVER_DIST_RELEASE=bionic
+SERVER_DIST_RELEASE=focal
 SERVER_DIST_URL=http://archive.ubuntu.com/ubuntu
 SERVER_DIST_COMPONENTS=main,universe
