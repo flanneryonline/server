@@ -15,6 +15,47 @@ apt-get upgrade -qq --no-install-recommends
 apt-get dist-upgrade -qq --no-install-recommends
 apt-get autoremove -qq
 
-get_server_code
+#server config update
+if [ ! -d "$SERVER_INSTALL" ]
+then
+    git clone "$SERVER_GIT_LOCATION" "$SERVER_INSTALL"
+    errorcheck && echoerr "failed to clone from git" && return 1
+fi
+pushd "$SERVER_INSTALL" >/dev/null
+git rev-parse --git-dir >/dev/null 2>&1
+errorcheck && popd >/dev/null && echoerr "directory not a git repo" && return 1
+git remote update >/dev/null
+errorcheck && popd >/dev/null && echoerr "failed to update git repo" && return 1
+local_rev=$(git rev-parse master)
+server_rev=$(git rev-parse origin/master)
+if [ "$local_rev" != "$server_rev" ]
+then
+    git reset --hard origin/master >/dev/null
+    errorcheck && popd >/dev/null && echoerr "failed to reset git" && return 1
+fi
+popd >/dev/null
+
+echo "marking bin executable"
+chmod +x "$SERVER_INSTALL/bin/"*
+
+#dotfiles update
+if [ ! -d "/home/$ADMIN_USERNAME" ]
+then
+    git clone "$DOTFILE_GIT_LOCATION" "/home/$ADMIN_USERNAME"
+    errorcheck && echoerr "failed to clone from git" && return 1
+fi
+pushd "/home/$ADMIN_USERNAME" >/dev/null
+git rev-parse --git-dir >/dev/null 2>&1
+errorcheck && popd >/dev/null && echoerr "directory not a git repo" && return 1
+git remote update >/dev/null
+errorcheck && popd >/dev/null && echoerr "failed to update git repo" && return 1
+local_rev=$(git rev-parse master)
+server_rev=$(git rev-parse origin/master)
+if [ "$local_rev" != "$server_rev" ]
+then
+    git reset --hard origin/master >/dev/null
+    errorcheck && popd >/dev/null && echoerr "failed to reset git" && return 1
+fi
+popd >/dev/null
 
 exit 0
