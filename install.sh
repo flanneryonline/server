@@ -1,74 +1,86 @@
 #!/usr/bin/env bash
 
-# [ -d /opt/server ] && rm -r /opt/server
-# git clone https://github.com/flanneryonline/server.git /opt/server && cd /opt/server
-# chmod +x install.sh && ./install.sh |& tee /var/log/debootstrap.log
+exec 2> >(logger -s -t $(basename $0))
 
-export DEBIAN_FRONTEND=noninteractive
+set -e
 
 SERVER_INSTALL=${SERVER_INSTALL:-/opt/server}
 . "$SERVER_INSTALL/environment"
 . "$SERVER_INSTALL/include"
 
-root=/mnt/install
-chroot_eval="chroot "$root" /usr/bin/env PATH=/usr/sbin:/usr/bin/:/bin:/sbin DEBIAN_FRONTEND=noninteractive"
+[ ! -e /etc/update-motd.d/00-header ] && \
+    ln -s /opt/server/bin/motd/00-header /etc/update-motd.d/00-header
+[ ! -h /etc/update-motd.d/00-header ] && \
+    rm -r /etc/update-motd.d/00-header && \
+    ln -s /opt/server/bin/motd/00-header /etc/update-motd.d/00-header
 
-FAST_STORAGE_ENABLED=${FAST_STORAGE_ENABLED:-1}
-SLOW_STORAGE_ENABLED=${SLOW_STORAGE_ENABLED:-1}
-BACKUP_ENABLED=${BACKUP_ENABLED:-1}
+[ ! -e /etc/update-motd.d/10-info ] && \
+    ln -s /opt/server/bin/motd/10-info /etc/update-motd.d/10-info
+[ ! -h /etc/update-motd.d/10-info ] && \
+    rm -r /etc/update-motd.d/10-info && \
+    ln -s /opt/server/bin/motd/10-info /etc/update-motd.d/10-info
 
-admin_password=$(whiptail --title "Set $ADMIN_USERNAME password" --passwordbox "Please enter password for user $ADMIN_USERNAME:" 0 10 2>&1 >/dev/tty)
-wt_boot='whiptail --title "Choose All Boot Disks" --checklist "Boot disks will be ERASED!" 0 10 0 '
-wt_fast_storage='whiptail --title "Choose All Fast Disks" --checklist "FAST disks will be ERASED!" 0 10 0 '
-wt_slow_storage='whiptail --title "Choose All Storage Disks" --checklist "Storage disks will be ERASED!" 0 10 0 '
-boot_disks=$(filter_quotes "$(eval $wt_boot $(whiptail_disks) 2>&1 >/dev/tty)")
-[ $FAST_STORAGE_ENABLED -eq 1 ] && fast_disks=$(filter_quotes "$(eval $wt_fast_storage $(whiptail_disks $boot_disks) 2>&1 >/dev/tty)")
-[ $SLOW_STORAGE_ENABLED -eq 1 ] && slow_disks=$(filter_quotes "$(eval $wt_slow_storage $(whiptail_disks $boot_disks $fast_storage_disks) 2>&1 >/dev/tty)")
+[ ! -e /etc/update-motd.d/20-services ] && \
+    ln -s /opt/server/bin/motd/20-services /etc/update-motd.d/20-services
+[ ! -h /etc/update-motd.d/20-services ] && \
+    rm -r /etc/update-motd.d/20-services && \
+    ln -s /opt/server/bin/motd/20-services /etc/update-motd.d/20-services
 
-[ "x$boot_disks" = "x" ] && echoerr "Must select a boot disk" && exit 1
-[ "x$fast_disks" = "x" ] && FAST_STORAGE_ENABLED=0
-[ "x$slow_disks" = "x" ] && SLOW_STORAGE_ENABLED=0
+[ ! -e /etc/update-motd.d/30-storage ] && \
+    ln -s /opt/server/bin/motd/30-storage /etc/update-motd.d/30-storage
+[ ! -h /etc/update-motd.d/30-storage ] && \
+    rm -r /etc/update-motd.d/30-storage && \
+    ln -s /opt/server/bin/motd/30-storage /etc/update-motd.d/30-storage
 
-wt_main_net='whiptail --title "Choose one or more interfaces for main network" --checklist "Multiple require LACP setup at switch" 0 10 0 '
-wt_vpn_net='whiptail --title "Choose one or more interfaces for vpn network" --checklist "Multiple require LACP setup at switch" 0 10 0 '
-wt_media_net='whiptail --title "Choose one or more interfaces for media network" --checklist "Multiple require LACP setup at switch" 0 10 0 '
-wt_other_net='whiptail --title "Choose one or more interfaces for other network" --checklist "Multiple require LACP setup at switch" 0 10 0 '
+#echo "\"Samsung SSD 840 EVO 120G B\"                            190  C  \"Samsung SSD 840 EVO 120GB\"" >> /etc/hddtemp.db
 
-net_list_main=$(filter_quotes "$(eval $wt_main_net $(whiptail_net main_net media_net vpn_net) 2>&1 >/dev/tty)")
-net_list_vpn=$(filter_quotes "$(eval $wt_main_net $(whiptail_net $net_list_main media_net vpn_net) 2>&1 >/dev/tty)")
-net_list_media=$(filter_quotes "$(eval $wt_main_net $(whiptail_net $net_list_main $net_list_vpn media_net) 2>&1 >/dev/tty)")
-net_list_other=$(filter_quotes "$(eval $wt_main_net $(whiptail_net $net_list_main $net_list_vpn $net_list_media) 2>&1 >/dev/tty)")
+systemctl disable motd-news.service
+systemctl disable motd-news.timer
+systemctl enable /opt/server/systemd/system/foss-motdupdate.timer
+systemctl enable /opt/server/systemd/system/foss-motdupdate.service
 
-#whiptail --yes-button "Confirm" --no-button "Cancel" --title "Confirm Info" --yesno "$(wt_confirm)" 0 10
-#errorcheck && exit 1
+#FlanneryOnlineSystemServices Symlinks
+systemctl enable /opt/server/systemd/FlanneryOnlineSystemServices/foss-diskscrub.service
+systemctl enable /opt/server/systemd/FlanneryOnlineSystemServices/foss-diskscrub.timer
+systemctl enable /opt/server/systemd/FlanneryOnlineSystemServices/foss-docker-clean.service
+systemctl enable /opt/server/systemd/FlanneryOnlineSystemServices/foss-docker-clean.timer
+systemctl enable /opt/server/systemd/FlanneryOnlineSystemServices/foss-docker-health.service
+systemctl enable /opt/server/systemd/FlanneryOnlineSystemServices/foss-docker-health.timer
+systemctl enable /opt/server/systemd/FlanneryOnlineSystemServices/foss-motd-update.service
+systemctl enable /opt/server/systemd/FlanneryOnlineSystemServices/foss-motd-update.timer
 
-[ -f /etc/apt/sources.list ] && rm /etc/apt/sources.list
-touch /etc/apt/sources.list
-[ ! -d /etc/apt/sources.list.d ] && mkdir -p /etc/apt/sources.list.d
-[ "$(ls -A /etc/apt/sources.list.d)" ] && rm /etc/apt/sources.list.d/*
+#FlanneryOnlineDockerServices Symlinks
+systemctl enable /opt/server/systemd/FlanneryOnlineDockerServices/fods.target
+systemctl enable /opt/server/systemd/FlanneryOnlineDockerServices/media/fods-media.target
+systemctl enable /opt/server/systemd/FlanneryOnlineDockerServices/vpn/fods-vpn.target
+systemctl enable /opt/server/systemd/FlanneryOnlineDockerServices/fods@.service
 
-echo "deb [arch=amd64] $SERVER_DIST_URL $SERVER_DIST_RELEASE main universe" \
-    >  /etc/apt/sources.list.d/$SERVER_DIST.$SERVER_DIST_RELEASE.list
+for service in /opt/server/docker/games/*
+do
+    [ -f $service ] && [ $(cat /opt/server/docker/games/$service) != "" ] && systemctl enable /opt/server/systemd/FlanneryOnlineDockerServices/fods@games-default-$service.service
+done
+for service in /opt/server/docker/games/vpn/*
+do
+    [ -f $service ] && [ $(cat /opt/server/docker/games/vpn/$service) != "" ] && systemctl enable /opt/server/systemd/FlanneryOnlineDockerServices/fods@games-vpn-$service.service
+done
 
-echo "deb [arch=amd64] $SERVER_DIST_URL $SERVER_DIST_RELEASE-updates main universe" \
-    >  /etc/apt/sources.list.d/$SERVER_DIST.$SERVER_DIST_RELEASE.updates.list
+for service in /opt/server/docker/system/*
+do
+    [ -f $service ] && [ $(cat /opt/server/docker/system/$service) != "" ] && systemctl enable /opt/server/systemd/FlanneryOnlineDockerServices/fods@system-default-$service.service
+done
+for service in /opt/server/docker/system/vpn/*
+do
+    [ -f $service ] && [ $(cat /opt/server/docker/system/vpn/$service) != "" ] && systemctl enable /opt/server/systemd/FlanneryOnlineDockerServices/fods@system-vpn-$service.service
+done
 
-echo "deb [arch=amd64] $SERVER_DIST_URL $SERVER_DIST_RELEASE-security main universe" \
-    >  /etc/apt/sources.list.d/$SERVER_DIST.$SERVER_DIST_RELEASE.security.list
+for service in /opt/server/docker/media/*
+do
+    [ -f $service ] && [ $(cat /opt/server/docker/media/$service) != "" ] && systemctl enable /opt/server/systemd/FlanneryOnlineDockerServices/fods@media-default-$service.service
+done
+for service in /opt/server/docker/media/vpn/*
+do
+    [ -f $service ] && [ $(cat /opt/server/docker/media/vpn/$service) != "" ] && systemctl enable /opt/server/systemd/FlanneryOnlineDockerServices/fods@media-vpn-$service.service
+done
 
-apt-get update
-apt-get install -y \
-    --no-install-recommends \
-    zfs-initramfs \
-    gdisk \
-    debootstrap \
-    curl \
-    apt-transport-https
-errorcheck && exit 1
+systemctl daemon-reload
 
-clean_install
-errorcheck && exit 1
-
-echo "COMPLETE!"
-
-exit 0
