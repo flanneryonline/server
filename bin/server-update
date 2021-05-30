@@ -36,11 +36,11 @@ fi
 popd >/dev/null
 
 chmod +x "$SERVER_INSTALL/bin/"*
-chmod +x "$SERVER_INSTALL/bin/docker/media"*
-chmod +x "$SERVER_INSTALL/bin/docker/media/vpn"*
-chmod +x "$SERVER_INSTALL/bin/docker/system"*
-chmod +x "$SERVER_INSTALL/bin/docker/games"*
-chmod +x "$SERVER_INSTALL/bin/motd"*
+chmod +x "$SERVER_INSTALL/bin/docker/media/"*
+chmod +x "$SERVER_INSTALL/bin/docker/media/vpn/"*
+chmod +x "$SERVER_INSTALL/bin/docker/system/"*
+chmod +x "$SERVER_INSTALL/bin/docker/games/"*
+chmod +x "$SERVER_INSTALL/bin/motd/"*
 
 #dotfiles update
 if [ ! -d "/home/$ADMIN_USERNAME" ]
