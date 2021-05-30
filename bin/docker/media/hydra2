@@ -18,4 +18,4 @@ docker create \
 -e PUID=$DOCKER_PUID -e PGID=$DOCKER_PGID \
 -e TZ=$SERVER_TIMEZONE \
 -v $STORAGE_CONFIG_DIR/hydra2:/config \
-linuxserver/hydra2
+linuxserver/nzbhydra2
