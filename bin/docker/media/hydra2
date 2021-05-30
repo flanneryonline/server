@@ -14,6 +14,7 @@ docker create \
 --health-interval=5s \
 --health-start-period=5s \
 --health-timeout=5s \
+-p 5076:5076 \
 -e PUID=$DOCKER_PUID -e PGID=$DOCKER_PGID \
 -e TZ=$SERVER_TIMEZONE \
 -v $STORAGE_CONFIG_DIR/hydra2:/config \
