@@ -6,31 +6,7 @@ set -e
 
 check_service=$1
 
-for type in "/opt/server/docker/"*
-do
-    if [ ! -f "$type" ]
-    then
-        for network in "/opt/server/docker/$type/"*
-        do
-            if [ ! -f "$network" ]
-            then
-                for service in "/opt/server/docker/$type/$network/"*
-                do
-                    if [ -f "$service" ]
-                    then
-                        [ "$service" = "$check_service" ] && exit 0
-                    fi
-                done
-            fi
-        done
-        for service in "/opt/server/docker/$type/"*
-        do
-            if [ -f "$service" ]
-            then
-                [ "$service" = "$check_service" ] && exit 0
-            fi
-        done
-    fi
-done
+find_service=$(find /opt/server/bin/docker/ -type f -exec echo {} \; | grep $check_service)
+[ ! -z $find_service ] && exit 0
 
 exit 1
