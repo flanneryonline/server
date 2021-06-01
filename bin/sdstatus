@@ -1,17 +1,14 @@
 #!/usr/bin/env bash
 
-echo ""
-echo "Failed Services:"
-end="No services failed!"
+exec 2> >(logger -s -t $(basename $0))
 
-for service in $(ls /opt/server/docker)
-do
-    # Color the next line green if it's active, else red
-    if [ "$(systemctl is-active "docker@$service.service")" != "active" ]; then
-	    echo -e "  $service: \e[31m▲ Failed\e[0m"
-        end="FAIL"
-    fi
-done
-if [ "$end" != "FAIL" ]; then
-    echo -e "\e[32m$end\e[0m"
+set -e
+
+use_sudo=
+if [ $UID -ne 0 ]; then
+    use_sudo="sudo"
 fi
+
+$use_sudo systemctl status $($use_sudo /opt/server/bin/service-scripts/get-full-service-name $1)
+
+exit 0
