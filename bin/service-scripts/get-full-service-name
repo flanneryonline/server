@@ -22,7 +22,7 @@ then
     exit 1
 fi
 
-if ! /opt/server/bin/service-scripts/service-check
+if ! /opt/server/bin/service-scripts/service-check $service
 then
     echo "$service is not a valid service."
     exit 1
