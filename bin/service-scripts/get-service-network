@@ -9,6 +9,6 @@ check_service=$1
 output=$(find /opt/server/bin/docker -type f -exec echo {} \; | cut -d'/' -f7- | grep $check_service)
 
 [ $output = $check_service ] && echo "" && exit 0
-[ ! -z $output ] && echo $output | cut -d'/' -f1 | exit 0
+[ ! -z $output ] && echo $output | cut -d'/' -f1 && exit 0
 
 exit 1
