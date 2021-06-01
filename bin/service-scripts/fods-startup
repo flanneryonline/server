@@ -13,8 +13,8 @@ docker_name=${docker_name#*-}
 network=${docker_name%%-*}
 service=${docker_name#*-}
 
-/opt/server/bin/service-scripts/fods-network $network $service
+/opt/server/bin/service-scripts/fods-network "$network" "$service"
 
-/opt/server/docker/$type/$service
+"/opt/server/docker/$type/$service"
 
 exit 0

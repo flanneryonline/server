@@ -31,19 +31,19 @@ do
     available=$(make_readable $available_bites)
     total=$(make_readable $total_bites)
 
-    [ ! -d /etc/server/motd/$pool ] && mkdir -p /etc/server/motd/$pool
-    echo "used=$used" > /etc/server/motd/$pool/info
-    echo "used_bites=$used_bites" >> /etc/server/motd/$pool/info
-    echo "available=$available" >> /etc/server/motd/$pool/info
-    echo "available_bites=$available_bites" >> /etc/server/motd/$pool/info
-    echo "total=$total" >> /etc/server/motd/$pool/info
-    echo "total_bites=$total_bites" >> /etc/server/motd/$pool/info
+    [ ! -d "/etc/server/motd/$pool" ] && mkdir -p "/etc/server/motd/$pool"
+    echo "used=$used" > "/etc/server/motd/$pool/info"
+    echo "used_bites=$used_bites" >> "/etc/server/motd/$pool/info"
+    echo "available=$available" >> "/etc/server/motd/$pool/info"
+    echo "available_bites=$available_bites" >> "/etc/server/motd/$pool/info"
+    echo "total=$total" >> "/etc/server/motd/$pool/info"
+    echo "total_bites=$total_bites" >> "/etc/server/motd/$pool/info"
 
     for disk in $(zdb -C $pool | grep path | awk '{print $2}' | sed "s/'//g")
     do
         disk_name=${disk##*/}
-        [ ! -d /etc/server/motd/$pool/disks/$disk_name ] && mkdir -p /etc/server/motd/$pool/disks/$disk_name
-        echo "temp=$(hddtemp $disk | awk 'BEGIN {FS=":"};{print $3}' | sed 's/ //g' | sed 's/°C//g')" > /etc/server/motd/$pool/disks/$disk_name/info
+        [ ! -d "/etc/server/motd/$pool/disks/$disk_name" ] && mkdir -p "/etc/server/motd/$pool/disks/$disk_name"
+        echo "temp=$(hddtemp $disk | awk 'BEGIN {FS=":"};{print $3}' | sed 's/ //g' | sed 's/°C//g')" > "/etc/server/motd/$pool/disks/$disk_name/info"
     done
 done
 

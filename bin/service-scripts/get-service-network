@@ -6,28 +6,28 @@ set -e
 
 check_service=$1
 
-for type in /opt/server/docker/*
+for type in "/opt/server/docker/"*
 do
-    if [ ! -f $type ]
+    if [ ! -f "$type" ]
     then
-        for network in /opt/server/docker/$type/*
+        for network in "/opt/server/docker/$type/"*
         do
-            if [ ! -f $network ]
+            if [ ! -f "$network" ]
             then
-                for service in /opt/server/docker/$type/$network/*
+                for service in "/opt/server/docker/$type/$network/"*
                 do
-                    if [ -f $service ]
+                    if [ -f "$service" ]
                     then
-                        [ $service = $check_service ] && printf $network && exit 0
+                        [ "$service" = "$check_service" ] && printf "$type" && exit 0
                     fi
                 done
             fi
         done
-        for service in /opt/server/docker/$type/*
+        for service in "/opt/server/docker/$type/"*
         do
-            if [ -f $service ]
+            if [ -f "$service" ]
             then
-                [ $service = $check_service ] && printf $network && exit 0
+                [ "$service" = "$check_service" ] && printf "$network" && exit 0
             fi
         done
     fi
