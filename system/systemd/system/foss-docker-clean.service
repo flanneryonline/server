@@ -8,3 +8,6 @@ Type=oneshot
 User=root
 Group=root
 ExecStart=/usr/bin/docker system prune -f
+
+[Install]
+WantedBy=fods-media.target

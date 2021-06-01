@@ -9,3 +9,6 @@ WorkingDirectory=/tmp
 User=root
 Group=root
 ExecStart=/opt/server/bin/service-scripts/motd-update
+
+[Install]
+WantedBy=multi-user.target
