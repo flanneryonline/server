@@ -18,7 +18,7 @@ do
                 do
                     if [ -f "$service" ]
                     then
-                        [ "$service" = "$check_service" ] && printf "$type" && exit 0
+                        [ "$service" = "$check_service" ] && printf "$network" && exit 0
                     fi
                 done
             fi
@@ -27,7 +27,7 @@ do
         do
             if [ -f "$service" ]
             then
-                [ "$service" = "$check_service" ] && printf "$network" && exit 0
+                [ "$service" = "$check_service" ] && printf "" && exit 0
             fi
         done
     fi
