@@ -8,14 +8,15 @@ service=$1
 
 timeout=60
 state=$(docker inspect $service | jq ".[] .State.Health.Status" | sed 's/"//g')
-while [ $state != "healthy" && $state != "null"]
+[ -z $state ] && exit 1
+while [ "$state" != "healthy" ] && [ "$state" != "null" ]
 do
     timeout=$((timeout-1))
     sleep 1s
 
     if [ $timeout -eq 0 ]
     then
-        exit 1
+        exit 2
     fi
 
     state=$(docker inspect $service | jq ".[] .State.Health.Status" | sed 's/"//g')
