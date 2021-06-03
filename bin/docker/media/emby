@@ -9,6 +9,7 @@ docker pull emby/embyserver
 
 docker create \
 --name=emby \
+-p 8096:8096 \
 -e UID=$DOCKER_PUID -e GID=$DOCKER_PGID \
 -v $STORAGE_CONFIG_DIR/emby:/config \
 -v $STORAGE_MEDIA_DIR:/media \
