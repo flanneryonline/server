@@ -6,11 +6,13 @@ end="No services failed!"
 
 for service in $(/opt/server/bin/service-scripts/list-all-services)
 do
-    # Color the next line green if it's active, else red
-    if [ "$(systemctl is-active $(/opt/server/bin/service-scripts/get-full-service-name $service))" != "active" ]; then
-	    echo -e "  $service: \e[31m▲ Failed\e[0m"
+
+    state=$(docker inspect $service | jq ".[] .State.Health.Status" | sed 's/"//g')
+    if [ -z $state ] || [ "$state" != "healthy" ]; then
+        echo -e "  $service: \e[31m▲ Failed\e[0m"
         end="FAIL"
     fi
+
 done
 if [ "$end" != "FAIL" ]; then
     echo -e "\e[32m$end\e[0m"
