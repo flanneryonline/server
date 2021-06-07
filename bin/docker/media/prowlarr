@@ -5,16 +5,16 @@ set -e
 SERVER_INSTALL=${SERVER_INSTALL:-/opt/server}
 . "$SERVER_INSTALL/environment"
 
-docker pull linuxserver/hydra2
+docker pull linuxserver/prowlarr
 
 docker create \
---name=hydra2 \
---health-cmd="curl --max-time 5 -Lsf 'http://127.0.0.1:5076' >/dev/null" \
+--name=prowlarr \
+-p 9696:9696 \
+--health-cmd="curl --max-time 5 -Lsf 'http://127.0.0.1:9696' >/dev/null" \
 --health-interval=5s \
 --health-start-period=5s \
 --health-timeout=5s \
--p 5076:5076 \
 -e PUID=$DOCKER_PUID -e PGID=$DOCKER_PGID \
 -e TZ=$SERVER_TIMEZONE \
--v $STORAGE_CONFIG_DIR/hydra2:/config \
-linuxserver/nzbhydra2
+-v $STORAGE_CONFIG_DIR/prowlarr:/config \
+linuxserver/prowlarr
