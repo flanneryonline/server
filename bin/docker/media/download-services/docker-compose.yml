@@ -122,3 +122,25 @@ services:
             - nzbget
             - prowlarr
         image: ghcr.io/linuxserver/sonarr
+
+    lidarr:
+        container_name: lidarr
+        ports:
+            - '8686:8686'
+        healthcheck:
+            test: curl --max-time 5 -Lsf http://127.0.0.1:8686 >/dev/null
+            interval: 5s
+            timeout: 5s
+            start_period: 5s
+        environment:
+            - PUID=$DOCKER_PUID
+            - PGID=$DOCKER_PGID
+            - TZ=$SERVER_TIMEZONE
+        volumes:
+            - '$STORAGE_CONFIG_DIR/lidarr:/config'
+            - '$STORAGE_MEDIA_DIR/audio/main:/music'
+            - '$STORAGE_DOWNLOAD_DIR:/downloads'
+        depends_on:
+            - nzbget
+            - prowlarr
+        image: ghcr.io/linuxserver/lidarr
