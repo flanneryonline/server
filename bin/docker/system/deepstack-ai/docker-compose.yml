@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+
+  trigger:
+    volumes:
+      - /mnt/camera/@Snapshot:/aiinput
+    environment:
+      - TZ=America/Chicago
+    ports:
+      - 4242:4242
+    secrets:
+      - triggers
+      - settings
+    image: danecreekphotography/node-deepstackai-trigger:latest
+    restart: always
+    depends_on:
+      - deepstack-ai
+
+  deepstack-ai:
+    image: deepquestai/deepstack:latest
+    restart: always
+    volumes:
+      - localstorage:/datastore
+    environment:
+      - VISION-DETECTION=True
+
+volumes:
+  localstorage:
+
+secrets:
+  settings:
+    file: ./settings.json
+  triggers:
+    file: ./triggers.json

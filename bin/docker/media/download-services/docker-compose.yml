@@ -1,0 +1,124 @@
+version: '3.3'
+services:
+    nzbget:
+        container_name: nzbget
+        ports:
+            - '6789:6789'
+        healthcheck:
+            test: ["CMD", "curl", "--max-time 5 -Lsf", "http://127.0.0.1:6789"]
+            interval: 5s
+            timeout: 5s
+            start_period: 5s
+        environment:
+            - PUID=$DOCKER_PUID
+            - PGID=$DOCKER_PGID
+            - TZ=$SERVER_TIMEZONE
+        volumes:
+            - '$STORAGE_CONFIG_DIR/nzbget:/config'
+            - '$STORAGE_DOWNLOAD_DIR:/downloads'
+        image: ghcr.io/linuxserver/nzbget
+
+    prowlarr:
+        container_name: prowlarr
+        ports:
+            - '9696:9696'
+        healthcheck:
+            test: ["CMD", "curl", "--max-time 5 -Lsf", "http://127.0.0.1:9696"]
+            interval: 5s
+            timeout: 5s
+            start_period: 5s
+        environment:
+            - PUID=$DOCKER_PUID
+            - PGID=$DOCKER_PGID
+            - TZ=$SERVER_TIMEZONE
+        volumes:
+            - '$STORAGE_CONFIG_DIR/prowlarr:/config'\
+        image: ghcr.io/linuxserver/prowlarr:develop
+
+    radarr:
+        container_name: radarr
+        ports:
+            - '7878:7878'
+        healthcheck:
+            test: ["CMD", "curl", "--max-time 5 -Lsf", "http://127.0.0.1:7878"]
+            interval: 5s
+            timeout: 5s
+            start_period: 5s
+        environment:
+            - PUID=$DOCKER_PUID
+            - PGID=$DOCKER_PGID
+            - TZ=$SERVER_TIMEZONE
+        volumes:
+            - '$STORAGE_CONFIG_DIR/radarr:/config'
+            - '$STORAGE_MEDIA_DIR/movies:/movies'
+            - '$STORAGE_DOWNLOAD_DIR:/downloads'
+        depends_on:
+            - nzbget
+            - prowlarr
+        image: ghcr.io/linuxserver/radarr
+
+    radarr4k:
+        container_name: radarr4k
+        ports:
+            - '7888:7888'
+        healthcheck:
+            test: ["CMD", "curl", "--max-time 5 -Lsf", "http://127.0.0.1:7888"]
+            interval: 5s
+            timeout: 5s
+            start_period: 5s
+        environment:
+            - PUID=$DOCKER_PUID
+            - PGID=$DOCKER_PGID
+            - TZ=$SERVER_TIMEZONE
+        volumes:
+            - '$STORAGE_CONFIG_DIR/radarr4k:/config'
+            - '$STORAGE_MEDIA_DIR/movies:/movies'
+            - '$STORAGE_DOWNLOAD_DIR:/downloads'
+        depends_on:
+            - nzbget
+            - prowlarr
+        image: ghcr.io/linuxserver/radarr
+
+    sonarr:
+        container_name: sonarr
+        ports:
+            - '8989:8989'
+        healthcheck:
+            test: ["CMD", "curl", "--max-time 5 -Lsf", "http://127.0.0.1:8989"]
+            interval: 5s
+            timeout: 5s
+            start_period: 5s
+        environment:
+            - PUID=$DOCKER_PUID
+            - PGID=$DOCKER_PGID
+            - TZ=$SERVER_TIMEZONE
+        volumes:
+            - '$STORAGE_CONFIG_DIR/sonarr:/config'
+            - '$STORAGE_MEDIA_DIR/shows:/shows'
+            - '$STORAGE_DOWNLOAD_DIR:/downloads'
+        depends_on:
+            - nzbget
+            - prowlarr
+        image: ghcr.io/linuxserver/sonarr
+
+    sonarr4k:
+        container_name: sonarr4k
+        ports:
+            - '8988:8988'
+        healthcheck:
+            test: ["CMD", "curl", "--max-time 5 -Lsf", "http://127.0.0.1:8988"]
+            interval: 5s
+            timeout: 5s
+            start_period: 5s
+        environment:
+            - PUID=$DOCKER_PUID
+            - PGID=$DOCKER_PGID
+            - TZ=$SERVER_TIMEZONE
+        volumes:
+            - '$STORAGE_CONFIG_DIR/sonarr4k:/config'
+            - '$STORAGE_MEDIA_DIR/shows:/shows'
+            - '$STORAGE_DOWNLOAD_DIR:/downloads'
+        depends_on:
+            - nzbget
+            - prowlarr
+        image: ghcr.io/linuxserver/sonarr
