@@ -6,7 +6,7 @@ set -e
 
 network=$1
 service=$2
-[ network = "default" ] && exit 0
+[ network = "" ] && exit 0
 
 if [ network = "vpn" ]
 then
