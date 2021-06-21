@@ -32,7 +32,7 @@ services:
             - PGID=$DOCKER_PGID
             - TZ=$SERVER_TIMEZONE
         volumes:
-            - '$STORAGE_CONFIG_DIR/prowlarr:/config'\
+            - '$STORAGE_CONFIG_DIR/prowlarr:/config'
         image: ghcr.io/linuxserver/prowlarr:develop
 
     radarr:
