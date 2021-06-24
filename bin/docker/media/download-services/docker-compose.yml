@@ -1,5 +1,41 @@
 version: '3.3'
 services:
+    plex:
+        container_name: plex
+        ports:
+            - '32400:32400/tcp'
+            - '3005:3005/tcp'
+            - '8324:8324/tcp'
+            - '32469:32469/tcp'
+            - '1900:1900/udp'
+            - '32410:32410/udp'
+            - '32412:32412/udp'
+            - '32413:32413/udp'
+            - '32414:32414/udp'
+        environment:
+            - PUID=$DOCKER_PUID
+            - PGID=$DOCKER_PGID
+            - VERSION=docker
+            - TZ=$SERVER_TIMEZONE
+        volumes:
+            - '$STORAGE_CONFIG_DIR/plex:/config'
+            - '$STORAGE_MEDIA_DIR:/media'
+        image: ghcr.io/linuxserver/plex
+
+    emby:
+        container_name: emby
+        ports:
+            - '8096:8096'
+        environment:
+            - UID=$DOCKER_PUID
+            - GID=$DOCKER_PGID
+        volumes:
+            - '$STORAGE_CONFIG_DIR/emby:/config'
+            - '$STORAGE_MEDIA_DIR:/media'
+        tmpfs: /transcode
+        image: emby/embyserver
+
+
     nzbget:
         container_name: nzbget
         ports:
@@ -55,6 +91,8 @@ services:
         depends_on:
             - nzbget
             - prowlarr
+            - plex
+            - emby
         image: ghcr.io/linuxserver/radarr
 
     radarr4k:
@@ -77,6 +115,8 @@ services:
         depends_on:
             - nzbget
             - prowlarr
+            - plex
+            - emby
         image: ghcr.io/linuxserver/radarr
 
     sonarr:
@@ -99,6 +139,8 @@ services:
         depends_on:
             - nzbget
             - prowlarr
+            - plex
+            - emby
         image: ghcr.io/linuxserver/sonarr
 
     sonarr4k:
@@ -121,6 +163,8 @@ services:
         depends_on:
             - nzbget
             - prowlarr
+            - plex
+            - emby
         image: ghcr.io/linuxserver/sonarr
 
     lidarr:
@@ -143,4 +187,6 @@ services:
         depends_on:
             - nzbget
             - prowlarr
+            - plex
+            - emby
         image: ghcr.io/linuxserver/lidarr
