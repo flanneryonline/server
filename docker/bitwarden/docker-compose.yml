@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+    server:
+        container_name: bitwarden
+        ports:
+            - '8099:80'
+        environment:
+            - SIGNUPS_ALLOWED=false
+            - INVITATIONS_ALLOWED=false
+            - 'DOMAIN=https://password.$SERVER_DOMAIN'
+            - WEB_VAULT_FOLDER=/data/web
+        volumes:
+            - '$STORAGE_CONFIG_DIR/bitwarden:/data'
+        image: vaultwarden/server
