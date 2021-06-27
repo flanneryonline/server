@@ -1,0 +1,44 @@
+version: '3.2'
+
+volumes:
+    nextcloud:
+    db:
+
+services:
+    db:
+        image: mariadb
+        restart: always
+        command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+        volumes:
+            - db:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_password
+            - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+            - MYSQL_DATABASE=nextcloud
+            - MYSQL_USER=nextcloud
+        secrets:
+            - mysql_password
+
+    app:
+        image: nextcloud:fpm
+        restart: always
+        volumes:
+            - nextcloud:/var/www/html
+        depends_on:
+            - db
+        environment:
+            - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+            - MYSQL_DATABASE=nextcloud
+            - MYSQL_USER=nextcloud
+            - MYSQL_HOST=db
+            - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nextcloud_admin_password
+            - NEXTCLOUD_ADMIN_USER=$ADMIN_USERNAME
+        secrets:
+            - nextcloud_admin_password
+            - mysql_password
+
+secrets:
+    nextcloud_admin_password:
+        file: $STORAGE_SETTINGS_DIR/nextcloud_admin_password
+    mysql_password:
+        file: STORAGE_SETTINGS_DIR/mysql_password
