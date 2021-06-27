@@ -1,6 +1,0 @@
-[Unit]
-Description=FlanneryOnline System Services
-ConditionPathExistsGlob=/opt/server/bin/docker/system/*
-After=multi-user.target
-[Install]
-WantedBy=docker.target

@@ -1,6 +1,0 @@
-[Unit]
-Description=FlanneryOnline Media Services
-ConditionPathExistsGlob=/opt/server/bin/docker/media/*
-After=multi-user.target
-[Install]
-WantedBy=docker.target
