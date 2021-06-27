@@ -1,0 +1,23 @@
+version: '3.3'
+services:
+    unifi-controller:
+        container_name: unifi
+        healthcheck:
+            test: curl --max-time 5 -kILsf https://localhost:8443 >/dev/null
+            interval: 5s
+            timeout: 5s
+            start_period: 5s
+        ports:
+            - '8080:8080'
+            - '8081:8081'
+            - '8443:8443'
+            - '8880:8880'
+            - '8843:8843'
+            - '3478:3478/udp'
+            - '10001:10001/udp'
+        environment:
+            - PUID=$DOCKER_PUID
+            - PGID=$DOCKER_PGID
+        volumes:
+            - '$STORAGE_CONFIG_DIR/unifi:/config'
+        image: linuxserver/unifi-controller
