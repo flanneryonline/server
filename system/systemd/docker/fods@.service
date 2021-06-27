@@ -13,3 +13,6 @@ ExecStop=/usr/local/bin/docker-compose --env-file /opt/server/environment down
 
 ExecReload=/usr/local/bin/docker-compose pull --quiet --parallel
 ExecReload=/usr/local/bin/docker-compose --env-file /opt/server/environment up -d
+
+[Install]
+WantedBy=multi-user.target
