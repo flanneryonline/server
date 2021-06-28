@@ -1,13 +1,13 @@
 version: '3.2'
 
 volumes:
-    nextcloud:
+    nextcloud_data:
         driver: local
         driver_opts:
             o: bind
             type: none
             device: $STORAGE_CONFIG_DIR/nextcloud
-    db:
+    nextcloud_db_data:
         driver: local
         driver_opts:
             o: bind
@@ -20,7 +20,7 @@ services:
         restart: always
         command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
         volumes:
-            - db:/var/lib/mysql
+            - nextcloud_db_data:/var/lib/mysql
         environment:
             - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_password
             - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
@@ -35,7 +35,7 @@ services:
         ports:
             - 8077:80
         volumes:
-            - nextcloud:/var/www/html
+            - nextcloud_data:/var/www/html
         depends_on:
             - nextcloud_db
         environment:
