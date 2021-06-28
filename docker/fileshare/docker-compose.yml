@@ -12,7 +12,7 @@ volumes:
         driver_opts:
             o: bind
             type: none
-            device: $STORAGE_CONFIG_DIR/nextcloud/db
+            device: $STORAGE_CONFIG_DIR/nextcloud_db
 
 services:
     nextcloud_db:
