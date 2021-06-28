@@ -29,9 +29,11 @@ services:
         secrets:
             - mysql_password
 
-    app:
-        image: nextcloud:fpm
+    nextcloud:
+        image: nextcloud
         restart: always
+        ports:
+            - 8077:80
         volumes:
             - nextcloud:/var/www/html
         depends_on:
@@ -51,4 +53,4 @@ secrets:
     nextcloud_admin_password:
         file: $STORAGE_SETTINGS_DIR/nextcloud_admin_password
     mysql_password:
-        file: STORAGE_SETTINGS_DIR/mysql_password
+        file: $STORAGE_SETTINGS_DIR/mysql_password
