@@ -13,6 +13,30 @@ volumes:
             o: bind
             type: none
             device: $STORAGE_CONFIG_DIR/nextcloud_db
+    config_data:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: $STORAGE_CONFIG_DIR
+    media_data:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: $STORAGE_MEDIA_DIR
+    download_data:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: $STORAGE_DOWNLOAD_DIR
+    share_data:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: $STORAGE_SHARE_DIR
 
 services:
     nextcloud_db:
@@ -23,9 +47,9 @@ services:
             - nextcloud_db_data:/var/lib/mysql
         environment:
             - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_password
-            - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
             - MYSQL_DATABASE=nextcloud
             - MYSQL_USER=nextcloud
+            - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
         secrets:
             - mysql_password
 
@@ -36,6 +60,10 @@ services:
             - 8077:80
         volumes:
             - nextcloud_data:/var/www/html
+            - download_data:/var/www/html/data/download
+            - media_data:/var/www/html/data/media
+            - config_data:/var/www/html/data/configs
+            - share_data:/var/www/html/data/share
         depends_on:
             - nextcloud_db
         environment:
