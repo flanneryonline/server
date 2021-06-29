@@ -6,12 +6,12 @@ WorkingDirectory=/opt/server/docker/%i
 Type=oneshot
 RemainAfterExit=yes
 
-ExecStartPre=/usr/local/bin/docker-compose pull --quiet --parallel
+ExecStartPre=/usr/local/bin/docker-compose pull --quiet
 ExecStart=/usr/local/bin/docker-compose --env-file /opt/server/environment up -d
 
 ExecStop=/usr/local/bin/docker-compose --env-file /opt/server/environment down
 
-ExecReload=/usr/local/bin/docker-compose pull --quiet --parallel
+ExecReload=/usr/local/bin/docker-compose pull --quiet
 ExecReload=/usr/local/bin/docker-compose --env-file /opt/server/environment up -d
 
 [Install]
