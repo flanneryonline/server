@@ -24,6 +24,14 @@ services:
     environment:
       - VISION-DETECTION=True
 
+  screenshots:
+    image: nginx
+    restart: always
+    ports:
+      - 5050:80
+    volumes:
+      - /mnt/camera/@Snapshot/:/usr/share/nginx/html:ro
+
 volumes:
   localstorage:
 
