@@ -20,6 +20,7 @@ services:
         volumes:
             - '$STORAGE_CONFIG_DIR/plex:/config'
             - '$STORAGE_MEDIA_DIR:/media'
+        restart: unless-stopped
         image: ghcr.io/linuxserver/plex
 
     emby:
@@ -33,6 +34,7 @@ services:
             - '$STORAGE_CONFIG_DIR/emby:/config'
             - '$STORAGE_MEDIA_DIR:/media'
         tmpfs: /transcode
+        restart: unless-stopped
         image: emby/embyserver
 
 
@@ -52,6 +54,7 @@ services:
         volumes:
             - '$STORAGE_CONFIG_DIR/nzbget:/config'
             - '$STORAGE_DOWNLOAD_DIR:/downloads'
+        restart: unless-stopped
         image: ghcr.io/linuxserver/nzbget
 
     prowlarr:
@@ -69,6 +72,7 @@ services:
             - TZ=$SERVER_TIMEZONE
         volumes:
             - '$STORAGE_CONFIG_DIR/prowlarr:/config'
+        restart: unless-stopped
         image: ghcr.io/linuxserver/prowlarr:develop
 
     radarr:
@@ -93,6 +97,7 @@ services:
             - prowlarr
             - plex
             - emby
+        restart: unless-stopped
         image: ghcr.io/linuxserver/radarr
 
     radarr4k:
@@ -117,6 +122,7 @@ services:
             - prowlarr
             - plex
             - emby
+        restart: unless-stopped
         image: ghcr.io/linuxserver/radarr
 
     sonarr:
@@ -141,6 +147,7 @@ services:
             - prowlarr
             - plex
             - emby
+        restart: unless-stopped
         image: ghcr.io/linuxserver/sonarr
 
     sonarr4k:
@@ -165,6 +172,7 @@ services:
             - prowlarr
             - plex
             - emby
+        restart: unless-stopped
         image: ghcr.io/linuxserver/sonarr
 
     lidarr:
@@ -189,4 +197,20 @@ services:
             - prowlarr
             - plex
             - emby
+        restart: unless-stopped
         image: ghcr.io/linuxserver/lidarr
+    airsonic:
+        container_name: airsonic
+        ports:
+            - 4040:4040
+        environment:
+            - PUID=$DOCKER_PUID
+            - PGID=$DOCKER_PGID
+            - TZ=$SERVER_TIMEZONE
+        volumes:
+            - $STORAGE_CONFIG_DIR/airsonic:/config
+            - $STORAGE_MEDIA_DIR/audio/main:/music
+            - $STORAGE_MEDIA_DIR/audio/playlists:/playlists
+            - $STORAGE_MEDIA_DIR/audio/podcasts:/podcasts
+        restart: unless-stopped
+        image: ghcr.io/linuxserver/airsonic
