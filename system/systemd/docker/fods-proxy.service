@@ -1,0 +1,14 @@
+[Unit]
+Description=Proxy Network for fods services
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+
+ExecStart=/usr/bin/docker network inspect proxy || /usr/bin/docker network create proxy
+ExecStop=
+ExecReload=
+
+[Install]
+WantedBy=multi-user.target
+

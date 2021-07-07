@@ -1,5 +1,8 @@
 [Unit]
 Description=%i running in Docker
+Wants=fods-proxy.service
+Requires=fods-proxy.service
+After=fods-proxy.service
 
 [Service]
 WorkingDirectory=/opt/server/docker/%i
