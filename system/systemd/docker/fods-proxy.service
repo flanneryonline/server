@@ -5,9 +5,9 @@ Description=Proxy Network for fods services
 Type=oneshot
 RemainAfterExit=yes
 
-ExecStart=/usr/bin/docker network inspect proxy || /usr/bin/docker network create proxy
+ExecStart=/opt/server/bin/service-scripts/fods-proxy
 ExecStop=
-ExecReload=
+ExecReload=/opt/server/bin/service-scripts/fods-proxy
 
 [Install]
 WantedBy=multi-user.target
