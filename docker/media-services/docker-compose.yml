@@ -2,8 +2,10 @@ version: '3.3'
 services:
     plex:
         container_name: plex
+        networks:
+            - proxy
         ports:
-            - '32400:32400/tcp'
+            # - '32400:32400/tcp'
             - '3005:3005/tcp'
             - '8324:8324/tcp'
             - '32469:32469/tcp'
@@ -20,13 +22,24 @@ services:
         volumes:
             - '$STORAGE_CONFIG_DIR/plex:/config'
             - '$STORAGE_MEDIA_DIR:/media'
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.plex.loadbalancer.server.port=32400"
+            - "traefik.http.routers.plex.rule=Host('plex.flanneryonline.com')"
+            - "traefik.http.routers.plex.middlewares=https-redirect@file"
+            - "traefik.http.routers.plex.service=plex"
+            - "traefik.http.routers.plex-secure.rule=Host('plex.flanneryonline.com')"
+            - "traefik.http.routers.plex-secure.tls=true"
+            - "traefik.http.routers.plex-secure.tls.certresolver=leresolver"
+            - "traefik.http.routers.plex-secure.service=plex"
+            - "traefik.docker.network=proxy"
         restart: unless-stopped
         image: ghcr.io/linuxserver/plex
 
     emby:
         container_name: emby
-        ports:
-            - '8096:8096'
+        networks:
+            - proxy
         environment:
             - UID=$DOCKER_PUID
             - GID=$DOCKER_PGID
@@ -34,14 +47,25 @@ services:
             - '$STORAGE_CONFIG_DIR/emby:/config'
             - '$STORAGE_MEDIA_DIR:/media'
         tmpfs: /transcode
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.emby.loadbalancer.server.port=8096"
+            - "traefik.http.routers.emby.rule=Host('emby.flanneryonline.com')"
+            - "traefik.http.routers.emby.middlewares=https-redirect@file"
+            - "traefik.http.routers.emby.service=emby"
+            - "traefik.http.routers.emby-secure.rule=Host('emby.flanneryonline.com')"
+            - "traefik.http.routers.emby-secure.tls=true"
+            - "traefik.http.routers.emby-secure.tls.certresolver=leresolver"
+            - "traefik.http.routers.emby-secure.service=emby"
+            - "traefik.docker.network=proxy"
         restart: unless-stopped
         image: emby/embyserver
 
 
     nzbget:
         container_name: nzbget
-        ports:
-            - '6789:6789'
+        networks:
+            - proxy
         healthcheck:
             test: curl --max-time 5 -Lsf http://127.0.0.1:6789 >/dev/null
             interval: 5s
@@ -54,13 +78,24 @@ services:
         volumes:
             - '$STORAGE_CONFIG_DIR/nzbget:/config'
             - '$STORAGE_DOWNLOAD_DIR:/downloads'
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.nzbdownload.loadbalancer.server.port=6789"
+            - "traefik.http.routers.nzbdownload.rule=Host('nzbdownload.flanneryonline.com')"
+            - "traefik.http.routers.nzbdownload.middlewares=https-redirect@file"
+            - "traefik.http.routers.nzbdownload.service=nzbdownload"
+            - "traefik.http.routers.nzbdownload-secure.rule=Host('nzbdownload.flanneryonline.com')"
+            - "traefik.http.routers.nzbdownload-secure.tls=true"
+            - "traefik.http.routers.nzbdownload-secure.tls.certresolver=leresolver"
+            - "traefik.http.routers.nzbdownload-secure.service=nzbdownload"
+            - "traefik.docker.network=proxy"
         restart: unless-stopped
         image: ghcr.io/linuxserver/nzbget
 
     prowlarr:
         container_name: prowlarr
-        ports:
-            - '9696:9696'
+        networks:
+            - proxy
         healthcheck:
             test: curl --max-time 5 -Lsf http://127.0.0.1:9696 >/dev/null
             interval: 5s
@@ -72,13 +107,24 @@ services:
             - TZ=$SERVER_TIMEZONE
         volumes:
             - '$STORAGE_CONFIG_DIR/prowlarr:/config'
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.search.loadbalancer.server.port=9696"
+            - "traefik.http.routers.search.rule=Host('search.flanneryonline.com')"
+            - "traefik.http.routers.search.middlewares=https-redirect@file"
+            - "traefik.http.routers.search.service=search"
+            - "traefik.http.routers.search-secure.rule=Host('search.flanneryonline.com')"
+            - "traefik.http.routers.search-secure.tls=true"
+            - "traefik.http.routers.search-secure.tls.certresolver=leresolver"
+            - "traefik.http.routers.search-secure.service=search"
+            - "traefik.docker.network=proxy"
         restart: unless-stopped
         image: ghcr.io/linuxserver/prowlarr:develop
 
     radarr:
         container_name: radarr
-        ports:
-            - '7878:7878'
+        networks:
+            - proxy
         healthcheck:
             test: curl --max-time 5 -Lsf http://127.0.0.1:7878 >/dev/null
             interval: 5s
@@ -92,6 +138,17 @@ services:
             - '$STORAGE_CONFIG_DIR/radarr:/config'
             - '$STORAGE_MEDIA_DIR/movies:/movies'
             - '$STORAGE_DOWNLOAD_DIR:/downloads'
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.movies.loadbalancer.server.port=7878"
+            - "traefik.http.routers.movies.rule=Host('movies.flanneryonline.com')"
+            - "traefik.http.routers.movies.middlewares=https-redirect@file"
+            - "traefik.http.routers.movies.service=movies"
+            - "traefik.http.routers.movies-secure.rule=Host('movies.flanneryonline.com')"
+            - "traefik.http.routers.movies-secure.tls=true"
+            - "traefik.http.routers.movies-secure.tls.certresolver=leresolver"
+            - "traefik.http.routers.movies-secure.service=movies"
+            - "traefik.docker.network=proxy"
         depends_on:
             - nzbget
             - prowlarr
@@ -102,8 +159,8 @@ services:
 
     radarr4k:
         container_name: radarr4k
-        ports:
-            - '7888:7888'
+        networks:
+            - proxy
         healthcheck:
             test: curl --max-time 5 -Lsf http://127.0.0.1:7888 >/dev/null
             interval: 5s
@@ -117,6 +174,17 @@ services:
             - '$STORAGE_CONFIG_DIR/radarr4k:/config'
             - '$STORAGE_MEDIA_DIR/movies:/movies'
             - '$STORAGE_DOWNLOAD_DIR:/downloads'
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.movies4k.loadbalancer.server.port=7888"
+            - "traefik.http.routers.movies4k.rule=Host('movies4k.flanneryonline.com')"
+            - "traefik.http.routers.movies4k.middlewares=https-redirect@file"
+            - "traefik.http.routers.movies4k.service=movies4k"
+            - "traefik.http.routers.movies4k-secure.rule=Host('movies4k.flanneryonline.com')"
+            - "traefik.http.routers.movies4k-secure.tls=true"
+            - "traefik.http.routers.movies4k-secure.tls.certresolver=leresolver"
+            - "traefik.http.routers.movies4k-secure.service=movies4k"
+            - "traefik.docker.network=proxy"
         depends_on:
             - nzbget
             - prowlarr
@@ -127,8 +195,8 @@ services:
 
     sonarr:
         container_name: sonarr
-        ports:
-            - '8989:8989'
+        networks:
+            - proxy
         healthcheck:
             test: curl --max-time 5 -Lsf http://127.0.0.1:8989 >/dev/null
             interval: 5s
@@ -142,6 +210,17 @@ services:
             - '$STORAGE_CONFIG_DIR/sonarr:/config'
             - '$STORAGE_MEDIA_DIR/shows:/shows'
             - '$STORAGE_DOWNLOAD_DIR:/downloads'
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.shows.loadbalancer.server.port=8989"
+            - "traefik.http.routers.shows.rule=Host('shows.flanneryonline.com')"
+            - "traefik.http.routers.shows.middlewares=https-redirect@file"
+            - "traefik.http.routers.shows.service=shows"
+            - "traefik.http.routers.shows-secure.rule=Host('shows.flanneryonline.com')"
+            - "traefik.http.routers.shows-secure.tls=true"
+            - "traefik.http.routers.shows-secure.tls.certresolver=leresolver"
+            - "traefik.http.routers.shows-secure.service=shows"
+            - "traefik.docker.network=proxy"
         depends_on:
             - nzbget
             - prowlarr
@@ -152,8 +231,8 @@ services:
 
     sonarr4k:
         container_name: sonarr4k
-        ports:
-            - '8988:8988'
+        networks:
+            - proxy
         healthcheck:
             test: curl --max-time 5 -Lsf http://127.0.0.1:8988 >/dev/null
             interval: 5s
@@ -167,6 +246,17 @@ services:
             - '$STORAGE_CONFIG_DIR/sonarr4k:/config'
             - '$STORAGE_MEDIA_DIR/shows:/shows'
             - '$STORAGE_DOWNLOAD_DIR:/downloads'
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.shows4k.loadbalancer.server.port=8988"
+            - "traefik.http.routers.shows4k.rule=Host('shows4k.flanneryonline.com')"
+            - "traefik.http.routers.shows4k.middlewares=https-redirect@file"
+            - "traefik.http.routers.shows4k.service=shows4k"
+            - "traefik.http.routers.shows4k-secure.rule=Host('shows4k.flanneryonline.com')"
+            - "traefik.http.routers.shows4k-secure.tls=true"
+            - "traefik.http.routers.shows4k-secure.tls.certresolver=leresolver"
+            - "traefik.http.routers.shows4k-secure.service=shows4k"
+            - "traefik.docker.network=proxy"
         depends_on:
             - nzbget
             - prowlarr
@@ -177,8 +267,8 @@ services:
 
     lidarr:
         container_name: lidarr
-        ports:
-            - '8686:8686'
+        networks:
+            - proxy
         healthcheck:
             test: curl --max-time 5 -Lsf http://127.0.0.1:8686 >/dev/null
             interval: 5s
@@ -192,6 +282,17 @@ services:
             - '$STORAGE_CONFIG_DIR/lidarr:/config'
             - '$STORAGE_MEDIA_DIR/audio/main:/music'
             - '$STORAGE_DOWNLOAD_DIR:/downloads'
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.musicdownload.loadbalancer.server.port=8686"
+            - "traefik.http.routers.musicdownload.rule=Host('musicdownload.flanneryonline.com')"
+            - "traefik.http.routers.musicdownload.middlewares=https-redirect@file"
+            - "traefik.http.routers.musicdownload.service=musicdownload"
+            - "traefik.http.routers.musicdownload-secure.rule=Host('musicdownload.flanneryonline.com')"
+            - "traefik.http.routers.musicdownload-secure.tls=true"
+            - "traefik.http.routers.musicdownload-secure.tls.certresolver=leresolver"
+            - "traefik.http.routers.musicdownload-secure.service=musicdownload"
+            - "traefik.docker.network=proxy"
         depends_on:
             - nzbget
             - prowlarr
@@ -199,18 +300,7 @@ services:
             - emby
         restart: unless-stopped
         image: ghcr.io/linuxserver/lidarr
-    airsonic:
-        container_name: airsonic
-        ports:
-            - 4040:4040
-        environment:
-            - PUID=$DOCKER_PUID
-            - PGID=$DOCKER_PGID
-            - TZ=$SERVER_TIMEZONE
-        volumes:
-            - $STORAGE_CONFIG_DIR/airsonic:/config
-            - $STORAGE_MEDIA_DIR/audio/main:/music
-            - $STORAGE_MEDIA_DIR/audio/playlists:/playlists
-            - $STORAGE_MEDIA_DIR/audio/podcasts:/podcasts
-        restart: unless-stopped
-        image: ghcr.io/linuxserver/airsonic
+
+networks:
+    proxy:
+        external: true

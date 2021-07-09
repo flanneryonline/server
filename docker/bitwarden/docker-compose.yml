@@ -2,8 +2,10 @@ version: '3.3'
 services:
     server:
         container_name: bitwarden
-        ports:
-            - '8099:80'
+        networks:
+            - proxy
+        # ports:
+        #     - '8099:80'
         environment:
             - SIGNUPS_ALLOWED=false
             - INVITATIONS_ALLOWED=false
@@ -11,4 +13,19 @@ services:
             - WEB_VAULT_FOLDER=/data/web
         volumes:
             - '$STORAGE_CONFIG_DIR/bitwarden:/data'
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.password.loadbalancer.server.port=80"
+            - "traefik.http.routers.password.rule=Host('password.flanneryonline.com')"
+            - "traefik.http.routers.password.middlewares=https-redirect@file"
+            - "traefik.http.routers.password.service=password"
+            - "traefik.http.routers.password-secure.rule=Host('password.flanneryonline.com')"
+            - "traefik.http.routers.password-secure.tls=true"
+            - "traefik.http.routers.password-secure.tls.certresolver=leresolver"
+            - "traefik.http.routers.password-secure.service=password"
+            - "traefik.docker.network=proxy"
         image: vaultwarden/server
+
+networks:
+    proxy:
+        external: true

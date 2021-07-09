@@ -6,8 +6,8 @@ services:
       - /mnt/camera/@Snapshot:/aiinput
     environment:
       - TZ=$SERVER_TIMEZONE
-    ports:
-      - 4242:4242
+    networks:
+      - camera
     secrets:
       - triggers
       - settings
@@ -19,6 +19,8 @@ services:
   deepstack-ai:
     image: deepquestai/deepstack:latest
     restart: always
+    networks:
+      - camera
     volumes:
       - localstorage:/datastore
     environment:
@@ -27,8 +29,21 @@ services:
   screenshots:
     image: nginx
     restart: always
-    ports:
-      - 5050:80
+    networks:
+      - proxy
+    # ports:
+    #   - 5050:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.camera.loadbalancer.server.port=80"
+      - "traefik.http.routers.camera.rule=Host('camera.flanneryonline.com')"
+      - "traefik.http.routers.camera.middlewares=https-redirect@file"
+      - "traefik.http.routers.camera.service=camera"
+      - "traefik.http.routers.camera-secure.rule=Host('camera.flanneryonline.com')"
+      - "traefik.http.routers.camera-secure.tls=true"
+      - "traefik.http.routers.camera-secure.tls.certresolver=leresolver"
+      - "traefik.http.routers.camera-secure.service=camera"
+      - "traefik.docker.network=proxy"
     volumes:
       - /mnt/camera/@Snapshot/:/usr/share/nginx/html:ro
 
@@ -37,6 +52,11 @@ volumes:
 
 secrets:
   settings:
-    file: $STORAGE_CONFIG_DIR/camera/settings.json
+    file: $SERVER_INSTALL/configs/camera/settings.json
   triggers:
-    file: $STORAGE_CONFIG_DIR/camera/triggers.json
+    file: $SERVER_INSTALL/configs/camera/triggers.json
+
+networks:
+    camera:
+    proxy:
+        external: true

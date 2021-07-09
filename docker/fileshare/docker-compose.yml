@@ -1,51 +1,15 @@
 version: '3.2'
 
-volumes:
-    nextcloud_data:
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: $STORAGE_CONFIG_DIR/nextcloud
-    nextcloud_db_data:
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: $STORAGE_CONFIG_DIR/nextcloud_db
-    config_data:
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: $STORAGE_CONFIG_DIR
-    media_data:
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: $STORAGE_MEDIA_DIR
-    download_data:
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: $STORAGE_DOWNLOAD_DIR
-    share_data:
-        driver: local
-        driver_opts:
-            o: bind
-            type: none
-            device: $STORAGE_SHARE_DIR
-
 services:
     nextcloud_db:
         image: mariadb
         container_name: nextcloud_db
         restart: always
+        networks:
+            - nextcloud
         command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
         volumes:
-            - nextcloud_db_data:/var/lib/mysql
+            - $STORAGE_CONFIG_DIR/nextcloud_db:/var/lib/mysql
         environment:
             - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_password
             - MYSQL_DATABASE=nextcloud
@@ -58,14 +22,17 @@ services:
         image: nextcloud
         container_name: nextcloud
         restart: always
-        ports:
-            - 8077:80
+        networks:
+            - proxy
+            - nextcloud
+        # ports:
+        #     - 8077:80
         volumes:
-            - nextcloud_data:/var/www/html
-            - download_data:/var/www/html/data/download
-            - media_data:/var/www/html/data/media
-            - config_data:/var/www/html/data/configs
-            - share_data:/var/www/html/data/share
+            - $STORAGE_CONFIG_DIR/nextcloud:/var/www/html
+            - $STORAGE_DOWNLOAD_DIR:/var/www/html/data/download
+            - $STORAGE_MEDIA_DIR:/var/www/html/data/media
+            - $STORAGE_CONFIG_DIR:/var/www/html/data/configs
+            - $STORAGE_SHARE_DIR:/var/www/html/data/share
         depends_on:
             - nextcloud_db
         environment:
@@ -76,6 +43,17 @@ services:
             - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nextcloud_admin_password
             - NEXTCLOUD_ADMIN_USER=$ADMIN_USERNAME
             - NEXTCLOUD_TRUSTED_DOMAINS=hostserver.flanneryonline.com:8077 cloud.flanneryonline.com
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.cloud.loadbalancer.server.port=80"
+            - "traefik.http.routers.cloud.rule=Host('cloud.flanneryonline.com')"
+            - "traefik.http.routers.cloud.middlewares=https-redirect@file"
+            - "traefik.http.routers.cloud.service=cloud"
+            - "traefik.http.routers.cloud-secure.rule=Host('cloud.flanneryonline.com')"
+            - "traefik.http.routers.cloud-secure.tls=true"
+            - "traefik.http.routers.cloud-secure.tls.certresolver=leresolver"
+            - "traefik.http.routers.cloud-secure.service=cloud"
+            - "traefik.docker.network=proxy"
         secrets:
             - nextcloud_admin_password
             - mysql_password
@@ -85,3 +63,8 @@ secrets:
         file: $STORAGE_SETTINGS_DIR/nextcloud_admin_password
     mysql_password:
         file: $STORAGE_SETTINGS_DIR/mysql_password
+
+networks:
+    nextcloud:
+    proxy:
+        external: true
