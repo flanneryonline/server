@@ -22,6 +22,7 @@ SERVER_HOSTNAME=hostserver
 SERVER_NAME=FlanneryOnline
 SERVER_DOMAIN=flanneryonline.com
 SERVER_FQDN=hostserver.flanneryonline.com
+SERVER_INSTALL=/opt/server
 DOCKER_PUID=1001
 DOCKER_PGID=1001
 SERVER_DIST=ubuntu
