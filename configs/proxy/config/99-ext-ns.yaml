@@ -1,0 +1,27 @@
+http:
+  routers:
+    ns:
+      entryPoints:
+        - web
+      middlewares:
+        - https-redirect
+      services:
+        - ns
+    ns-secure:
+      entryPoints:
+        - websecure
+      rule: Host('ns.flanneryonline.com')
+      middlewares:
+        - ns
+      tls:
+        certResolver: leresolver
+      service: ns
+services:
+  ns:
+    loadBalancer:
+      servers:
+        - url: http://pi.hole:80
+middlewares:
+  ns:
+    addPrefix:
+      prefix: "/admin"

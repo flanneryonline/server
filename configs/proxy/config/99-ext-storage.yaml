@@ -1,0 +1,33 @@
+http:
+  routers:
+    storage:
+      entryPoints:
+        - "http"
+      middlewares:
+        - https-redirect
+      services:
+        - storage
+    storage-secure:
+      entryPoints:
+        - "https"
+      rule: "Host('storage.flanneryonline.com')"
+      # middlewares:
+      #   - storage
+      tls:
+        certResolver: leresolver
+      service: storage
+services:
+  storage:
+    loadBalancer:
+      servers:
+        - url: "http://10.10.10.1:8006"
+# middlewares:
+#   storage:
+#     headers:
+#       frameDeny: true
+#       sslRedirect: true
+#       browserXssFilter: true
+#       contentTypeNosniff: true
+#       forceSTSHeader: true
+#       stsIncludeSubdomains: true
+#       stsPreload: true

@@ -1,0 +1,33 @@
+http:
+  routers:
+    nas:
+      entryPoints:
+        - web
+      middlewares:
+        - https-redirect
+      services:
+        - nas
+    nas-secure:
+      entryPoints:
+        - websecure
+      rule: Host('nas.flanneryonline.com')
+      # middlewares:
+      #   - nas
+      tls:
+        certResolver: leresolver
+      service: nas
+services:
+  nas:
+    loadBalancer:
+      servers:
+        - url: http://server-nas.flanneryonline.com:5000
+# middlewares:
+#   nas:
+#     headers:
+#       frameDeny: true
+#       sslRedirect: true
+#       browserXssFilter: true
+#       contentTypeNosniff: true
+#       forceSTSHeader: true
+#       stsIncludeSubdomains: true
+#       stsPreload: true
