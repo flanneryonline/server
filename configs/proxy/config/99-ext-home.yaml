@@ -9,7 +9,7 @@ http:
     home-secure:
       entryPoints:
         - websecure
-      rule: Host('home.flanneryonline.com')
+      rule: Host(`home.flanneryonline.com`)
       # middlewares:
       #   - home
       tls:

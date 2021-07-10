@@ -9,7 +9,7 @@ http:
     router-secure:
       entryPoints:
         - websecure
-      rule: Host('router.flanneryonline.com')
+      rule: Host(`router.flanneryonline.com`)
       # middlewares:
       #   - router
       tls:

@@ -9,7 +9,7 @@ http:
     storage-secure:
       entryPoints:
         - websecure
-      rule: Host('storage.flanneryonline.com')
+      rule: Host(`storage.flanneryonline.com`)
       # middlewares:
       #   - storage
       tls:

@@ -10,9 +10,9 @@ services:
             - 443:443
         labels:
             - "proxy.enable=true"
-            - "proxy.http.routers.proxy.rule=Host('proxy.flanneryonline.com')"
+            - "proxy.http.routers.proxy.rule=Host(`proxy.flanneryonline.com`)"
             - "proxy.http.routers.proxy.middlewares=https-redirect@file"
-            - "proxy.http.routers.proxy-secure.rule=Host('proxy.flanneryonline.com')"
+            - "proxy.http.routers.proxy-secure.rule=Host(`proxy.flanneryonline.com`)"
             - "proxy.http.routers.proxy-secure.tls=true"
             - "proxy.http.routers.proxy-secure.tls.certresolver=leresolver"
             - "proxy.http.routers.proxy-secure.service=api@internal"
