@@ -16,11 +16,11 @@ http:
       tls:
         certResolver: leresolver
       service: nas
-services:
-  nas:
-    loadBalancer:
-      servers:
-        - url: http://server-nas.flanneryonline.com:5000
+  services:
+    nas:
+      loadBalancer:
+        servers:
+          - url: http://server-nas.flanneryonline.com:5000
 # middlewares:
 #   nas:
 #     headers:

@@ -16,11 +16,11 @@ http:
       tls:
         certResolver: leresolver
       service: storage
-services:
-  storage:
-    loadBalancer:
-      servers:
-        - url: "http://10.10.10.1:8006"
+  services:
+    storage:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.1:8006"
 # middlewares:
 #   storage:
 #     headers:

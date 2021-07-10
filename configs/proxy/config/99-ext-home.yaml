@@ -16,11 +16,11 @@ http:
       tls:
         certResolver: leresolver
       service: home
-services:
-  home:
-    loadBalancer:
-      servers:
-        - url: http://homeassistant.flanneryonline.com:8123
+  services:
+    home:
+      loadBalancer:
+        servers:
+          - url: http://homeassistant.flanneryonline.com:8123
 # middlewares:
 #   home:
 #     headers:

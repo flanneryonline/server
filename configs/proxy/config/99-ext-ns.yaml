@@ -16,12 +16,12 @@ http:
       tls:
         certResolver: leresolver
       service: ns
-services:
-  ns:
-    loadBalancer:
-      servers:
-        - url: http://pi.hole:80
-middlewares:
-  ns:
-    addPrefix:
-      prefix: "/admin"
+  services:
+    ns:
+      loadBalancer:
+        servers:
+          - url: http://pi.hole:80
+  middlewares:
+    ns:
+      addPrefix:
+        prefix: "/admin"
