@@ -19,7 +19,7 @@ http:
     home:
       loadBalancer:
         servers:
-          - url: http://homeassistant.flanneryonline.com:8123
+          - url: "http://homeassistant.flanneryonline.com:8123"
 # middlewares:
 #   home:
 #     headers:

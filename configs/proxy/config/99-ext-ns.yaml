@@ -19,7 +19,7 @@ http:
     ns:
       loadBalancer:
         servers:
-          - url: http://pi.hole:80
+          - url: "http://pi.hole:80"
   middlewares:
     ns:
       addPrefix:

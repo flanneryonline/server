@@ -19,7 +19,7 @@ http:
     nas:
       loadBalancer:
         servers:
-          - url: http://server-nas.flanneryonline.com:5000
+          - url: "http://server-nas.flanneryonline.com:5000"
 # middlewares:
 #   nas:
 #     headers:

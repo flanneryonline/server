@@ -19,7 +19,7 @@ http:
     storage:
       loadBalancer:
         servers:
-          - url: http://10.10.10.1:8006
+          - url: "http://10.10.10.1:8006"
 # middlewares:
 #   storage:
 #     headers:

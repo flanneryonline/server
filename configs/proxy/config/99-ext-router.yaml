@@ -9,7 +9,7 @@ http:
     router-secure:
       entryPoints:
         - websecure
-      rule: Host(`router.flanneryonline.com`)
+      rule: "Host(`router.flanneryonline.com`)"
       # middlewares:
       #   - router
       tls:
@@ -19,7 +19,7 @@ http:
     router:
       loadBalancer:
         servers:
-          - url: http://10.0.0.1:8888
+          - url: "http://10.0.0.1:8888"
 # middlewares:
 #   router:
 #     headers:
