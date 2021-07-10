@@ -1,0 +1,9 @@
+middlewares:
+  https-headers:
+    headers:
+      forceSTSHeader: true
+      stsIncludeSubdomains: true
+      stsSeconds: 315360000
+      frameDeny: true
+      contentTypeNosniff: true
+      browserXssFilter: true
