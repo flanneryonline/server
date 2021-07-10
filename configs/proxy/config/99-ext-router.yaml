@@ -10,8 +10,6 @@ http:
       entryPoints:
         - websecure
       rule: "Host(`router.flanneryonline.com`)"
-      # middlewares:
-      #   - router
       tls:
         certResolver: leresolver
       service: router
@@ -20,13 +18,3 @@ http:
       loadBalancer:
         servers:
           - url: "http://10.0.0.1:8888"
-# middlewares:
-#   router:
-#     headers:
-#       frameDeny: true
-#       sslRedirect: true
-#       browserXssFilter: true
-#       contentTypeNosniff: true
-#       forceSTSHeader: true
-#       stsIncludeSubdomains: true
-#       stsPreload: true

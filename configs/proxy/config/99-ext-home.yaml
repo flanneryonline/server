@@ -10,8 +10,6 @@ http:
       entryPoints:
         - websecure
       rule: "Host(`home.flanneryonline.com`)"
-      # middlewares:
-      #   - home
       tls:
         certResolver: leresolver
       service: home
@@ -20,13 +18,3 @@ http:
       loadBalancer:
         servers:
           - url: "http://homeassistant.flanneryonline.com:8123"
-# middlewares:
-#   home:
-#     headers:
-#       frameDeny: true
-#       sslRedirect: true
-#       browserXssFilter: true
-#       contentTypeNosniff: true
-#       forceSTSHeader: true
-#       stsIncludeSubdomains: true
-#       stsPreload: true
