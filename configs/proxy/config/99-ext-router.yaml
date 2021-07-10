@@ -2,14 +2,14 @@ http:
   routers:
     router:
       entryPoints:
-        - "http"
+        - web
       middlewares:
         - https-redirect@file
       service: router
     router-secure:
       entryPoints:
-        - "https"
-      rule: "Host('router.flanneryonline.com')"
+        - websecure
+      rule: Host('router.flanneryonline.com')
       # middlewares:
       #   - router
       tls:
@@ -19,7 +19,7 @@ http:
     router:
       loadBalancer:
         servers:
-          - url: "http://10.0.0.1:8888"
+          - url: http://10.0.0.1:8888
 # middlewares:
 #   router:
 #     headers:

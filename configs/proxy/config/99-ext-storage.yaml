@@ -2,14 +2,14 @@ http:
   routers:
     storage:
       entryPoints:
-        - "http"
+        - web
       middlewares:
         - https-redirect@file
       service: storage
     storage-secure:
       entryPoints:
-        - "https"
-      rule: "Host('storage.flanneryonline.com')"
+        - websecure
+      rule: Host('storage.flanneryonline.com')
       # middlewares:
       #   - storage
       tls:
@@ -19,7 +19,7 @@ http:
     storage:
       loadBalancer:
         servers:
-          - url: "http://10.10.10.1:8006"
+          - url: http://10.10.10.1:8006
 # middlewares:
 #   storage:
 #     headers:
