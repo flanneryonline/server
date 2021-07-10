@@ -5,8 +5,7 @@ http:
         - web
       middlewares:
         - https-redirect@file
-      services:
-        - nas
+      service: nas
     nas-secure:
       entryPoints:
         - websecure

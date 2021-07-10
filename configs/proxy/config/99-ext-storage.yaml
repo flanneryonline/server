@@ -5,8 +5,7 @@ http:
         - "http"
       middlewares:
         - https-redirect@file
-      services:
-        - storage
+      service: storage
     storage-secure:
       entryPoints:
         - "https"

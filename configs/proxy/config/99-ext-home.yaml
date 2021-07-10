@@ -5,8 +5,7 @@ http:
         - web
       middlewares:
         - https-redirect@file
-      services:
-        - home
+      service: home
     home-secure:
       entryPoints:
         - websecure

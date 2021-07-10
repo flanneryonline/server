@@ -5,8 +5,7 @@ http:
         - "http"
       middlewares:
         - https-redirect@file
-      services:
-        - router
+      service: router
     router-secure:
       entryPoints:
         - "https"
@@ -16,11 +15,11 @@ http:
       tls:
         certResolver: leresolver
       service: router
-services:
-  router:
-    loadBalancer:
-      servers:
-        - url: "http://10.0.0.1:8888"
+  services:
+    router:
+      loadBalancer:
+        servers:
+          - url: "http://10.0.0.1:8888"
 # middlewares:
 #   router:
 #     headers:

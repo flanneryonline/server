@@ -5,8 +5,7 @@ http:
         - web
       middlewares:
         - https-redirect@file
-      services:
-        - ns
+      service: ns
     ns-secure:
       entryPoints:
         - websecure
