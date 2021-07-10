@@ -9,7 +9,7 @@ http:
     nas-secure:
       entryPoints:
         - websecure
-      rule: Host(`nas.flanneryonline.com`)
+      rule: "Host(`nas.flanneryonline.com`)"
       # middlewares:
       #   - nas
       tls:

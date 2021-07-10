@@ -9,7 +9,7 @@ http:
     ns-secure:
       entryPoints:
         - websecure
-      rule: Host(`ns.flanneryonline.com`)
+      rule: "Host(`ns.flanneryonline.com`)"
       middlewares:
         - ns
       tls:
