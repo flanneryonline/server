@@ -35,6 +35,8 @@ services:
     #   - 5050:80
     labels:
       - "traefik.enable=true"
+      - "traefik.http.routers.camera.entryPoints=web"
+      - "traefik.http.routers.camera-secure.entryPoints=websecure"
       - "traefik.http.services.camera.loadbalancer.server.port=80"
       - "traefik.http.routers.camera.rule=Host(`camera.flanneryonline.com`)"
       - "traefik.http.routers.camera.middlewares=https-redirect@file"

@@ -45,6 +45,8 @@ services:
             - NEXTCLOUD_TRUSTED_DOMAINS=hostserver.flanneryonline.com:8077 cloud.flanneryonline.com
         labels:
             - "traefik.enable=true"
+            - "traefik.http.routers.cloud.entryPoints=web"
+            - "traefik.http.routers.cloud-secure.entryPoints=websecure"
             - "traefik.http.services.cloud.loadbalancer.server.port=80"
             - "traefik.http.routers.cloud.rule=Host(`cloud.flanneryonline.com`)"
             - "traefik.http.routers.cloud.middlewares=https-redirect@file,cloud-redirect"

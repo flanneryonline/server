@@ -10,6 +10,8 @@ services:
             - 443:443
         labels:
             - "proxy.enable=true"
+            - "traefik.http.routers.proxy.entryPoints=web"
+            - "traefik.http.routers.proxy-secure.entryPoints=websecure"
             - "proxy.http.routers.proxy.rule=Host(`proxy.flanneryonline.com`)"
             - "proxy.http.routers.proxy.middlewares=https-redirect@file"
             - "proxy.http.routers.proxy-secure.rule=Host(`proxy.flanneryonline.com`)"
