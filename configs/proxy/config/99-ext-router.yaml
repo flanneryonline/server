@@ -6,7 +6,6 @@ http:
       middlewares:
         - https-redirect@file
       rule: "Host(`router.flanneryonline.com`)"
-      service: router
     router-secure:
       entryPoints:
         - websecure

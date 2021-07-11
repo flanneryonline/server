@@ -6,7 +6,6 @@ http:
       middlewares:
         - https-redirect@file
       rule: "Host(`home.flanneryonline.com`)"
-      service: home
     home-secure:
       entryPoints:
         - websecure
