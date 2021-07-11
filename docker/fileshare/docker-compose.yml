@@ -47,13 +47,16 @@ services:
             - "traefik.enable=true"
             - "traefik.http.services.cloud.loadbalancer.server.port=80"
             - "traefik.http.routers.cloud.rule=Host(`cloud.flanneryonline.com`)"
-            - "traefik.http.routers.cloud.middlewares=https-redirect@file"
+            - "traefik.http.routers.cloud.middlewares=https-redirect@file,cloud-redirect"
             - "traefik.http.routers.cloud.service=cloud"
             - "traefik.http.routers.cloud-secure.rule=Host(`cloud.flanneryonline.com`)"
             - "traefik.http.routers.cloud-secure.tls=true"
             - "traefik.http.routers.cloud-secure.tls.certresolver=leresolver"
             - "traefik.http.routers.cloud-secure.service=cloud"
             - "traefik.docker.network=proxy"
+            - "traefik.http.middlewares.cloud-redirect.redirectRegex.regex=https://(.*)/.well-known/(card|cal)dav"
+            - "traefik.http.middlewares.cloud-redirect.redirectRegex.permanent=true"
+            - "traefik.http.middlewares.cloud-redirect.redirectRegex.replacement=https://${1}/remote.php/dav/"
         secrets:
             - nextcloud_admin_password
             - mysql_password
