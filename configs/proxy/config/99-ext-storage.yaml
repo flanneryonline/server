@@ -6,7 +6,6 @@ http:
       middlewares:
         - https-redirect@file
       rule: "Host(`storage.flanneryonline.com`)"
-      service: storage
     storage-secure:
       entryPoints:
         - websecure
@@ -18,4 +17,4 @@ http:
     storage:
       loadBalancer:
         servers:
-          - url: "http://10.10.10.1:8006"
+          - url: "https://10.10.10.1:8006"
