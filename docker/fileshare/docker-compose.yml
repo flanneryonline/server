@@ -58,7 +58,7 @@ services:
             - "traefik.docker.network=proxy"
             - "traefik.http.middlewares.cloud-redirect.redirectRegex.regex=https://(.*)/.well-known/(card|cal)dav"
             - "traefik.http.middlewares.cloud-redirect.redirectRegex.permanent=true"
-            - "traefik.http.middlewares.cloud-redirect.redirectRegex.replacement=https://${1}/remote.php/dav/"
+            - "traefik.http.middlewares.cloud-redirect.redirectRegex.replacement=https://$${1}/remote.php/dav/"
         secrets:
             - nextcloud_admin_password
             - mysql_password
