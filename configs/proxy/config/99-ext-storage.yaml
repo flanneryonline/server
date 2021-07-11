@@ -5,6 +5,7 @@ http:
         - web
       middlewares:
         - https-redirect@file
+      rule: "Host(`storage.flanneryonline.com`)"
       service: storage
     storage-secure:
       entryPoints:

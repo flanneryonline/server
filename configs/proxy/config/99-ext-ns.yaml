@@ -5,6 +5,7 @@ http:
         - web
       middlewares:
         - https-redirect@file
+      rule: "Host(`ns.flanneryonline.com`)"
       service: ns
     ns-secure:
       entryPoints:

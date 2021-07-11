@@ -5,6 +5,7 @@ http:
         - web
       middlewares:
         - https-redirect@file
+      rule: "Host(`nas.flanneryonline.com`)"
       service: nas
     nas-secure:
       entryPoints:
