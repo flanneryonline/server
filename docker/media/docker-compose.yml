@@ -117,16 +117,27 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.search.loadbalancer.server.port=9696"
-            - "traefik.http.routers.search.entryPoints=web"
-            - "traefik.http.routers.search-secure.entryPoints=websecure"
-            - "traefik.http.routers.search.rule=Host(`search.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.search-secure.rule=Host(`search.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$PROWLARR_API_KEY`) || Query(`apikey`, `$PROWLARR_API_KEY`))"
-            - "traefik.http.routers.search.middlewares=https-redirect@file"
-            - "traefik.http.routers.search-secure.middlewares=oauth@file"
             - "traefik.http.routers.search.service=search"
+            - "traefik.http.routers.search-bypass.service=search"
             - "traefik.http.routers.search-secure.service=search"
+            #redirect
+            - "traefik.http.routers.search.entryPoints=web"
+            - "traefik.http.routers.search.rule=Host(`search.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.search.middlewares=https-redirect@file"
+            #Main
+            - "traefik.http.routers.search-secure.entryPoints=websecure"
+            - "traefik.http.routers.search-secure.rule=Host(`search.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.search-secure.middlewares=oauth@file"
             - "traefik.http.routers.search-secure.tls=true"
+            - "traefik.http.routers.search-secure.priority=99"
             - "traefik.http.routers.search-secure.tls.certresolver=leresolver"
+            #API Bypass
+            - "traefik.http.routers.search-bypass.entryPoints=websecure"
+            - "traefik.http.routers.search-bypass.rule=Host(`search.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$PROWLARR_API_KEY`) || Query(`apikey`, `$PROWLARR_API_KEY`))"
+            - "traefik.http.routers.search-bypass.middlewares=internal-auth@file"
+            - "traefik.http.routers.search-bypass.tls=true"
+            - "traefik.http.routers.search-bypass.tls.certresolver=leresolver"
+            - "traefik.http.routers.search-bypass.priority=100"
         image: ghcr.io/linuxserver/prowlarr:develop
 
     radarr:
@@ -150,16 +161,27 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.movies.loadbalancer.server.port=7878"
-            - "traefik.http.routers.movies.entryPoints=web"
-            - "traefik.http.routers.movies-secure.entryPoints=websecure"
-            - "traefik.http.routers.movies.rule=Host(`movies.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.movies-secure.rule=Host(`movies.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$RADARR_API_KEY`) || Query(`apikey`, `$RADARR_API_KEY`))"
-            - "traefik.http.routers.movies.middlewares=https-redirect@file"
-            - "traefik.http.routers.movies-secure.middlewares=oauth@file"
             - "traefik.http.routers.movies.service=movies"
+            - "traefik.http.routers.movies-bypass.service=movies"
             - "traefik.http.routers.movies-secure.service=movies"
+            #redirect
+            - "traefik.http.routers.movies.entryPoints=web"
+            - "traefik.http.routers.movies.rule=Host(`movies.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.movies.middlewares=https-redirect@file"
+            #Main
+            - "traefik.http.routers.movies-secure.entryPoints=websecure"
+            - "traefik.http.routers.movies-secure.rule=Host(`movies.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.movies-secure.middlewares=oauth@file"
             - "traefik.http.routers.movies-secure.tls=true"
+            - "traefik.http.routers.movies-secure.priority=99"
             - "traefik.http.routers.movies-secure.tls.certresolver=leresolver"
+            #API Bypass
+            - "traefik.http.routers.movies-bypass.entryPoints=websecure"
+            - "traefik.http.routers.movies-bypass.rule=Host(`movies.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$RADARR_API_KEY`) || Query(`apikey`, `$RADARR_API_KEY`))"
+            - "traefik.http.routers.movies-bypass.middlewares=internal-auth@file"
+            - "traefik.http.routers.movies-bypass.tls=true"
+            - "traefik.http.routers.movies-bypass.tls.certresolver=leresolver"
+            - "traefik.http.routers.movies-bypass.priority=100"
         depends_on:
             - nzbget
             - prowlarr
@@ -188,16 +210,27 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.movies4k.loadbalancer.server.port=7888"
-            - "traefik.http.routers.movies4k.entryPoints=web"
-            - "traefik.http.routers.movies4k-secure.entryPoints=websecure"
-            - "traefik.http.routers.movies4k.rule=Host(`movies4k.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.movies4k-secure.rule=Host(`movies4k.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$RADARR4K_API_KEY`) || Query(`apikey`, `$RADARR4K_API_KEY`))"
-            - "traefik.http.routers.movies4k.middlewares=https-redirect@file"
-            - "traefik.http.routers.movies4k-secure.middlewares=oauth@file"
             - "traefik.http.routers.movies4k.service=movies4k"
+            - "traefik.http.routers.movies4k-bypass.service=movies4k"
             - "traefik.http.routers.movies4k-secure.service=movies4k"
+            #redirect
+            - "traefik.http.routers.movies4k.entryPoints=web"
+            - "traefik.http.routers.movies4k.rule=Host(`movies4k.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.movies4k.middlewares=https-redirect@file"
+            #Main
+            - "traefik.http.routers.movies4k-secure.entryPoints=websecure"
+            - "traefik.http.routers.movies4k-secure.rule=Host(`movies4k.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.movies4k-secure.middlewares=oauth@file"
             - "traefik.http.routers.movies4k-secure.tls=true"
+            - "traefik.http.routers.movies4k-secure.priority=99"
             - "traefik.http.routers.movies4k-secure.tls.certresolver=leresolver"
+            #API Bypass
+            - "traefik.http.routers.movies4k-bypass.entryPoints=websecure"
+            - "traefik.http.routers.movies4k-bypass.rule=Host(`movies4k.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$RADARR4k_API_KEY`) || Query(`apikey`, `$RADARR4k_API_KEY`))"
+            - "traefik.http.routers.movies4k-bypass.middlewares=internal-auth@file"
+            - "traefik.http.routers.movies4k-bypass.tls=true"
+            - "traefik.http.routers.movies4k-bypass.tls.certresolver=leresolver"
+            - "traefik.http.routers.movies4k-bypass.priority=100"
         depends_on:
             - nzbget
             - prowlarr
@@ -226,16 +259,27 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.shows.loadbalancer.server.port=8989"
-            - "traefik.http.routers.shows.entryPoints=web"
-            - "traefik.http.routers.shows-secure.entryPoints=websecure"
-            - "traefik.http.routers.shows.rule=Host(`shows.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.shows-secure.rule=Host(`shows.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$SONARR_API_KEY`) || Query(`apikey`, `$SONARR_API_KEY`))"
-            - "traefik.http.routers.shows.middlewares=https-redirect@file"
-            - "traefik.http.routers.shows-secure.middlewares=oauth@file"
             - "traefik.http.routers.shows.service=shows"
+            - "traefik.http.routers.shows-bypass.service=shows"
             - "traefik.http.routers.shows-secure.service=shows"
+            #redirect
+            - "traefik.http.routers.shows.entryPoints=web"
+            - "traefik.http.routers.shows.rule=Host(`shows.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.shows.middlewares=https-redirect@file"
+            #Main
+            - "traefik.http.routers.shows-secure.entryPoints=websecure"
+            - "traefik.http.routers.shows-secure.rule=Host(`shows.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.shows-secure.middlewares=oauth@file"
             - "traefik.http.routers.shows-secure.tls=true"
+            - "traefik.http.routers.shows-secure.priority=99"
             - "traefik.http.routers.shows-secure.tls.certresolver=leresolver"
+            #API Bypass
+            - "traefik.http.routers.shows-bypass.entryPoints=websecure"
+            - "traefik.http.routers.shows-bypass.rule=Host(`shows.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$SONARR_API_KEY`) || Query(`apikey`, `$SONARR_API_KEY`))"
+            - "traefik.http.routers.shows-bypass.middlewares=internal-auth@file"
+            - "traefik.http.routers.shows-bypass.tls=true"
+            - "traefik.http.routers.shows-bypass.tls.certresolver=leresolver"
+            - "traefik.http.routers.shows-bypass.priority=100"
         depends_on:
             - nzbget
             - prowlarr
@@ -264,16 +308,27 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.shows4k.loadbalancer.server.port=8988"
-            - "traefik.http.routers.shows4k.entryPoints=web"
-            - "traefik.http.routers.shows4k-secure.entryPoints=websecure"
-            - "traefik.http.routers.shows4k.rule=Host(`shows4k.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.shows4k-secure.rule=Host(`shows4k.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$SONARR4K_API_KEY`) || Query(`apikey`, `$SONARR4K_API_KEY`))"
-            - "traefik.http.routers.shows4k.middlewares=https-redirect@file"
-            - "traefik.http.routers.shows4k-secure.middlewares=oauth@file"
             - "traefik.http.routers.shows4k.service=shows4k"
+            - "traefik.http.routers.shows4k-bypass.service=shows4k"
             - "traefik.http.routers.shows4k-secure.service=shows4k"
+            #redirect
+            - "traefik.http.routers.shows4k.entryPoints=web"
+            - "traefik.http.routers.shows4k.rule=Host(`shows4k.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.shows4k.middlewares=https-redirect@file"
+            #Main
+            - "traefik.http.routers.shows4k-secure.entryPoints=websecure"
+            - "traefik.http.routers.shows4k-secure.rule=Host(`shows4k.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.shows4k-secure.middlewares=oauth@file"
             - "traefik.http.routers.shows4k-secure.tls=true"
+            - "traefik.http.routers.shows4k-secure.priority=99"
             - "traefik.http.routers.shows4k-secure.tls.certresolver=leresolver"
+            #API Bypass
+            - "traefik.http.routers.shows4k-bypass.entryPoints=websecure"
+            - "traefik.http.routers.shows4k-bypass.rule=Host(`shows4k.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$SONARR4k_API_KEY`) || Query(`apikey`, `$SONARR4k_API_KEY`))"
+            - "traefik.http.routers.shows4k-bypass.middlewares=internal-auth@file"
+            - "traefik.http.routers.shows4k-bypass.tls=true"
+            - "traefik.http.routers.shows4k-bypass.tls.certresolver=leresolver"
+            - "traefik.http.routers.shows4k-bypass.priority=100"
         depends_on:
             - nzbget
             - prowlarr
@@ -302,16 +357,27 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.music.loadbalancer.server.port=8686"
-            - "traefik.http.routers.music.entryPoints=web"
-            - "traefik.http.routers.music-secure.entryPoints=websecure"
-            - "traefik.http.routers.music.rule=Host(`music.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.music-secure.rule=Host(`music.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$LIDARR_API_KEY`) || Query(`apikey`, `$LIDARR_API_KEY`))"
-            - "traefik.http.routers.music.middlewares=https-redirect@file"
-            - "traefik.http.routers.music-secure.middlewares=oauth@file"
             - "traefik.http.routers.music.service=music"
+            - "traefik.http.routers.music-bypass.service=music"
             - "traefik.http.routers.music-secure.service=music"
+            #redirect
+            - "traefik.http.routers.music.entryPoints=web"
+            - "traefik.http.routers.music.rule=Host(`music.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.music.middlewares=https-redirect@file"
+            #Main
+            - "traefik.http.routers.music-secure.entryPoints=websecure"
+            - "traefik.http.routers.music-secure.rule=Host(`music.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.music-secure.middlewares=oauth@file"
             - "traefik.http.routers.music-secure.tls=true"
+            - "traefik.http.routers.music-secure.priority=99"
             - "traefik.http.routers.music-secure.tls.certresolver=leresolver"
+            #API Bypass
+            - "traefik.http.routers.music-bypass.entryPoints=websecure"
+            - "traefik.http.routers.music-bypass.rule=Host(`music.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$LIDARR_API_KEY`) || Query(`apikey`, `$LIDARR_API_KEY`))"
+            - "traefik.http.routers.music-bypass.middlewares=internal-auth@file"
+            - "traefik.http.routers.music-bypass.tls=true"
+            - "traefik.http.routers.music-bypass.tls.certresolver=leresolver"
+            - "traefik.http.routers.music-bypass.priority=100"
         depends_on:
             - nzbget
             - prowlarr
