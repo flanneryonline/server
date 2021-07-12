@@ -60,4 +60,25 @@ then
 fi
 popd >/dev/null
 
+for file in (ls $SECRETS_LOCATION); do
+    echo "${file^^}=$(cat $SECRETS_LOCATION/$file)" | $use_sudo tee -a $SERVER_INSTALL/environment >/dev/null
+done
+
+# #stop all services
+# for service in ($use_sudo /opt/server/bin/service-scripts/list-all-services)
+# do
+#     $use_sudo /opt/server/bin/sdstop $service
+# done
+
+# #daemon reload
+# $use_sudo systemctl daemon-reload
+
+# #start all services
+# for service in ($use_sudo /opt/server/bin/service-scripts/list-all-services)
+# do
+#     $use_sudo /opt/server/bin/sdstart $service
+# done
+
+
+
 exit 0

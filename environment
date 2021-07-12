@@ -29,3 +29,5 @@ SERVER_DIST=ubuntu
 SERVER_DIST_RELEASE=focal
 SERVER_DIST_URL=http://archive.ubuntu.com/ubuntu
 SERVER_DIST_COMPONENTS=main,universe
+SERVER_EMAIL=pat@flanneryonline.com
+SECRETS_LOCATION=/etc/server/settings
