@@ -7,10 +7,10 @@ services:
             interval: 5s
             timeout: 5s
             start_period: 5s
+        networks:
+            - proxy
         ports:
-            - '8080:8080'
             - '8081:8081'
-            - '8443:8443'
             - '8880:8880'
             - '8843:8843'
             - '3478:3478/udp'
@@ -61,3 +61,7 @@ services:
             - "traefik.http.routers.container-secure.tls.certresolver=leresolver"
         image: portainer/portainer-ce:latest
         command: -H unix:///var/run/docker.sock
+
+networks:
+    proxy:
+        external: true
