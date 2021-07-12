@@ -47,7 +47,7 @@ services:
             - "traefik.http.routers.oauth.middlewares=oauth@file"
             - "traefik.http.routers.oauth.service=oauth"
             - "traefik.http.routers.oauth.tls=true"
-            - "traefik.http.routers.proxy-secure.tls.certresolver=leresolver"
+            - "traefik.http.routers.oauth.tls.certresolver=leresolver"
 
 networks:
     proxy:
