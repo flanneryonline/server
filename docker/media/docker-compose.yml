@@ -226,7 +226,7 @@ services:
             - "traefik.http.routers.movies4k-secure.tls.certresolver=leresolver"
             #API Bypass
             - "traefik.http.routers.movies4k-bypass.entryPoints=websecure"
-            - "traefik.http.routers.movies4k-bypass.rule=Host(`movies4k.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$RADARR4k_API_KEY`) || Query(`apikey`, `$RADARR4k_API_KEY`))"
+            - "traefik.http.routers.movies4k-bypass.rule=Host(`movies4k.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$RADARR4K_API_KEY`) || Query(`apikey`, `$RADARR4K_API_KEY`))"
             - "traefik.http.routers.movies4k-bypass.middlewares=internal-auth@file"
             - "traefik.http.routers.movies4k-bypass.tls=true"
             - "traefik.http.routers.movies4k-bypass.tls.certresolver=leresolver"
@@ -324,7 +324,7 @@ services:
             - "traefik.http.routers.shows4k-secure.tls.certresolver=leresolver"
             #API Bypass
             - "traefik.http.routers.shows4k-bypass.entryPoints=websecure"
-            - "traefik.http.routers.shows4k-bypass.rule=Host(`shows4k.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$SONARR4k_API_KEY`) || Query(`apikey`, `$SONARR4k_API_KEY`))"
+            - "traefik.http.routers.shows4k-bypass.rule=Host(`shows4k.$SERVER_DOMAIN`) && (Headers(`X-Api-Key`, `$SONARR4K_API_KEY`) || Query(`apikey`, `$SONARR4K_API_KEY`))"
             - "traefik.http.routers.shows4k-bypass.middlewares=internal-auth@file"
             - "traefik.http.routers.shows4k-bypass.tls=true"
             - "traefik.http.routers.shows4k-bypass.tls.certresolver=leresolver"
