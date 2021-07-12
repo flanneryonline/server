@@ -2,8 +2,6 @@
 
 exec 2> >(logger -s -t $(basename $0))
 
-set -e
-
 export DEBIAN_FRONTEND=noninteractive
 
 use_sudo=
@@ -24,39 +22,39 @@ $use_sudo apt-get autoremove -qq
 if [ ! -d "$SERVER_INSTALL" ]
 then
     $use_sudo git clone "$SERVER_GIT_LOCATION" "$SERVER_INSTALL"
-    errorcheck && echoerr "failed to clone from git" && return 1
+    errorcheck && echoerr "failed to clone from git" && exit 1
 fi
 pushd "$SERVER_INSTALL" >/dev/null
 $use_sudo git rev-parse --git-dir >/dev/null 2>&1
-errorcheck && popd >/dev/null && echoerr "directory not a git repo" && return 1
+errorcheck && popd >/dev/null && echoerr "directory not a git repo" && exit 1
 $use_sudo git remote update >/dev/null
-errorcheck && popd >/dev/null && echoerr "failed to update git repo" && return 1
+errorcheck && popd >/dev/null && echoerr "failed to update git repo" && exit 1
 local_rev=$(git rev-parse master)
 server_rev=$(git rev-parse origin/master)
 if [ "$local_rev" != "$server_rev" ]
 then
     $use_sudo git reset --hard origin/master >/dev/null
-    errorcheck && popd >/dev/null && echoerr "failed to reset git" && return 1
+    errorcheck && popd >/dev/null && echoerr "failed to reset git" && exit 1
 fi
 popd >/dev/null
 
 #dotfiles update
-if [ ! -d "/home/$ADMIN_USERNAME" ]
+if [ ! -d "/home/$ADMIN_USERNAME/dotfiles" ]
 then
-    $use_sudo git clone "$DOTFILE_GIT_LOCATION" "/home/$ADMIN_USERNAME"
-    errorcheck && echoerr "failed to clone from git" && return 1
+    $use_sudo git clone "$DOTFILE_GIT_LOCATION" "/home/$ADMIN_USERNAME/dotfiles"
+    errorcheck && echoerr "failed to clone from git" && exit 1
 fi
-pushd "/home/$ADMIN_USERNAME" >/dev/null
+pushd "/home/$ADMIN_USERNAME/dotfiles" >/dev/null
 $use_sudo git rev-parse --git-dir >/dev/null 2>&1
-errorcheck && popd >/dev/null && echoerr "directory not a git repo" && return 1
+errorcheck && popd >/dev/null && echoerr "directory not a git repo" && exit 1
 $use_sudo git remote update >/dev/null
-errorcheck && popd >/dev/null && echoerr "failed to update git repo" && return 1
+errorcheck && popd >/dev/null && echoerr "failed to update git repo" && exit 1
 local_rev=$(git rev-parse master)
 server_rev=$(git rev-parse origin/master)
 if [ "$local_rev" != "$server_rev" ]
 then
     $use_sudo git reset --hard origin/master >/dev/null
-    errorcheck && popd >/dev/null && echoerr "failed to reset git" && return 1
+    errorcheck && popd >/dev/null && echoerr "failed to reset git" && exit 1
 fi
 popd >/dev/null
 
