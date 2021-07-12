@@ -12,16 +12,47 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.proxy.entryPoints=web"
             - "traefik.http.routers.proxy-secure.entryPoints=websecure"
-            - "traefik.http.routers.proxy.rule=Host(`proxy.flanneryonline.com`)"
+            - "traefik.http.routers.proxy.rule=Host(`proxy.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.proxy-secure.rule=Host(`proxy.$SERVER_DOMAIN`)"
             - "traefik.http.routers.proxy.middlewares=https-redirect@file"
-            - "traefik.http.routers.proxy-secure.rule=Host(`proxy.flanneryonline.com`)"
+            - "traefik.http.routers.proxy-secure.middlewares=oauth@file"
+            - "traefik.http.routers.proxy.service=api@internal"
+            - "traefik.http.routers.proxy-secure.service=api@internal"
             - "traefik.http.routers.proxy-secure.tls=true"
             - "traefik.http.routers.proxy-secure.tls.certresolver=leresolver"
-            - "traefik.http.routers.proxy-secure.service=api@internal"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - $SERVER_INSTALL/configs/proxy:/etc/traefik
             - $STORAGE_CONFIG_DIR/traefik/acme.json:/acme.json
+
+    oauth:
+        container_name: oauth
+        image: thomseddon/traefik-forward-auth:latest
+        restart: always
+        networks:
+            - proxy
+        environment:
+            - PROVIDERS_GOOGLE_CLIENT_ID=$OAUTH_CLIENT_ID
+            - PROVIDERS_GOOGLE_CLIENT_SECRET=$OAUTH_CLIENT_SECRET
+            - SECRET=$OAUTH_SECRET
+            - COOKIE_DOMAIN=$SERVER_DOMAIN
+            - INSECURE_COOKIE=false
+            - AUTH_HOST=oauth.$SERVER_DOMAIN
+            - URL_PATH=/_oauth
+            - WHITELIST=$SERVER_EMAIL
+            - LOG_LEVEL=warn
+            - LOG_FORMAT=text
+            - LIFETIME=86400
+            - DEFAULT_ACTION=auth
+            - DEFAULT_PROVIDER=google
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.services.oauth.loadbalancer.server.port=4181"
+            - "traefik.http.routers.oauth.entrypoints=websecure"
+            - "traefik.http.routers.oauth.rule=Host(`oauth.$SERVER_DOMAIN`)"
+            - "traefik.http.routers.oauth.middlewares=oauth@file"
+            - "traefik.http.routers.oauth.service=oauth"
+            - "traefik.http.routers.oauth.tls=true"
 
 networks:
     proxy:

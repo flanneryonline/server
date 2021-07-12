@@ -3,13 +3,16 @@ http:
     router:
       entryPoints:
         - web
-      middlewares:
-        - https-redirect@file
       rule: "Host(`router.flanneryonline.com`)"
+      middlewares:
+        - https-redirect
+      service: router
     router-secure:
       entryPoints:
         - websecure
       rule: "Host(`router.flanneryonline.com`)"
+      middlewares:
+       - oauth
       tls:
         certResolver: leresolver
       service: router

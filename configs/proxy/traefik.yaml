@@ -10,8 +10,6 @@ entryPoints:
     http:
       tls:
         certResolver: leresolver
-      middlewares:
-        - https-headers@file
 
 certificatesResolvers:
   leresolver:

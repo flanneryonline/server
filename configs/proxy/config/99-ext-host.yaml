@@ -1,0 +1,29 @@
+http:
+  routers:
+    host:
+      entryPoints:
+        - web
+      rule: "Host(`host.flanneryonline.com`)"
+      middlewares:
+        - https-redirect
+      service: host
+    host-secure:
+      entryPoints:
+        - websecure
+      rule: "Host(`host.flanneryonline.com`)"
+      middlewares:
+        - host
+        - internal-auth
+      tls:
+        certResolver: leresolver
+      service: host
+  services:
+    host:
+      loadBalancer:
+        servers:
+          - url: "https://10.10.10.1:8006"
+  middlewares:
+    host:
+      headers:
+        customrequestheaders:
+          X-Forwarded-Proto: https

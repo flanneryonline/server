@@ -1,20 +1,23 @@
 http:
   routers:
-    nas:
+    drive:
       entryPoints:
         - web
+      rule: "Host(`drive.flanneryonline.com`)"
       middlewares:
-        - https-redirect@file
-      rule: "Host(`nas.flanneryonline.com`)"
-    nas-secure:
+        - https-redirect
+      service: drive
+    drive-secure:
       entryPoints:
         - websecure
-      rule: "Host(`nas.flanneryonline.com`)"
+      rule: "Host(`drive.flanneryonline.com`)"
+      middlewares:
+       - internal-auth
       tls:
         certResolver: leresolver
-      service: nas
+      service: drive
   services:
-    nas:
+    drive:
       loadBalancer:
         servers:
           - url: "http://server-nas.flanneryonline.com:5000"

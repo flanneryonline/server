@@ -3,15 +3,17 @@ http:
     ns:
       entryPoints:
         - web
-      middlewares:
-        - https-redirect@file
       rule: "Host(`ns.flanneryonline.com`)"
+      middlewares:
+        - https-redirect
+      service: ns
     ns-secure:
       entryPoints:
         - websecure
       rule: "Host(`ns.flanneryonline.com`)"
       middlewares:
         - ns
+        - oauth
       tls:
         certResolver: leresolver
       service: ns
