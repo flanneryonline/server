@@ -35,9 +35,11 @@ services:
             - PROVIDERS_GOOGLE_CLIENT_ID=$OAUTH_CLIENT_ID
             - PROVIDERS_GOOGLE_CLIENT_SECRET=$OAUTH_CLIENT_SECRET
             - SECRET=$OAUTH_SECRET
+            - URL_PATH=/_oauth
             - COOKIE_DOMAIN=$SERVER_DOMAIN
             - AUTH_HOST=oauth.$SERVER_DOMAIN
             - WHITELIST=$SERVER_EMAIL
+            - DEFAULT_ACTION=auth
             - DEFAULT_PROVIDER=google
         labels:
             - "traefik.enable=true"
