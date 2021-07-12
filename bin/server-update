@@ -60,7 +60,7 @@ then
 fi
 popd >/dev/null
 
-for file in (ls $SECRETS_LOCATION); do
+for file in $(ls $SECRETS_LOCATION); do
     echo "${file^^}=$(cat $SECRETS_LOCATION/$file)" | $use_sudo tee -a $SERVER_INSTALL/environment >/dev/null
 done
 
