@@ -10,6 +10,7 @@ entryPoints:
     http:
       tls:
         certResolver: leresolver
+        options: default@file
 
 certificatesResolvers:
   leresolver:
