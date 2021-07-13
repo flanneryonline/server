@@ -4,25 +4,29 @@ echo ""
 echo "Failed Services:"
 end="No services failed!"
 
-for service in $(/opt/server/bin/service-scripts/list-all-services)
+for stack in $(/opt/server/bin/service-scripts/list-all-services)
 do
 
-    docker inspect $service >/dev/null 2>&1
-    if [ $? = 1 ]; then
-        echo -e "  $service: \e[33m▲ Not Started\e[0m"
-        end="FAIL"
-    else
-        state=$(docker inspect $service | jq ".[] .State.Health.Status" | sed 's/"//g')
-        if [ $state = "null" ]; then
-            echo -e "  $service: \e[33m▲ Unknown\e[0m"
+    for service in $(docker-compose --project-directory /opt/server/docker/$stack --env-file /opt/server/environment ps -q)
+    do
+
+        docker inspect $service >/dev/null 2>&1
+        if [ $? = 1 ]; then
+            echo -e "  $service: \e[33m▲ Not Started\e[0m"
             end="FAIL"
         else
-            if [ -z $state ] || [ "$state" != "healthy" ]; then
-                echo -e "  $service: \e[31m▲ Failed\e[0m"
+            state=$(docker inspect $service | jq ".[] .State.Health.Status" | sed 's/"//g')
+            if [ $state = "null" ]; then
+                echo -e "  $service: \e[33m▲ Unknown\e[0m"
                 end="FAIL"
+            else
+                if [ -z $state ] || [ "$state" != "healthy" ]; then
+                    echo -e "  $service: \e[31m▲ Failed\e[0m"
+                    end="FAIL"
+                fi
             fi
         fi
-    fi
+    done
 
 done
 if [ "$end" != "FAIL" ]; then

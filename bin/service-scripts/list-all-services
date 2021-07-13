@@ -2,6 +2,4 @@
 
 exec 2> >(logger -s -t $(basename $0))
 
-set -e
-
-find /opt/server/bin/docker/ -type f -exec basename {} \;
+find /opt/server/docker -maxdepth 1 -type d -printf '%f\n' | grep -v docker/

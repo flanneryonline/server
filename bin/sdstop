@@ -2,13 +2,11 @@
 
 exec 2> >(logger -s -t $(basename $0))
 
-set -e
-
 use_sudo=
 if [ $UID -ne 0 ]; then
     use_sudo="sudo"
 fi
 
-$use_sudo systemctl stop $($use_sudo /opt/server/bin/service-scripts/get-full-service-name $1)
+$use_sudo systemctl stop "fods@$1.service"
 
 exit 0
