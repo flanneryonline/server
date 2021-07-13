@@ -29,7 +29,7 @@ providers:
     directory: /etc/traefik/config
     watch: true
 
-serverTransport:
+serversTransport:
   insecureSkipVerify: true
 
 api:
