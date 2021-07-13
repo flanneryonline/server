@@ -21,6 +21,6 @@ http:
         permanent: true
         regex: "https://(.*)/.well-known/(card|cal)dav"
         replacement: "https://${1}/remote.php/dav/"
-    nextcloud-cal:
-      addPrefix:
-        prefix: "/apps/calendar"
+    # nextcloud-cal:
+    #   addPrefix:
+    #     prefix: "/apps/calendar"
