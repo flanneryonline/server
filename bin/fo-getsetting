@@ -2,8 +2,6 @@
 
 exec 2> >(logger -s -t $(basename $0))
 
-set -e
-
 SERVER_INSTALL=${SERVER_INSTALL:-/opt/server}
 . "$SERVER_INSTALL/include"
 

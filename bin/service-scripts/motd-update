@@ -2,8 +2,6 @@
 
 exec 2> >(logger -s -t $(basename $0))
 
-set -e
-
 export DEBIAN_FRONTEND=noninteractive
 
 make_readable() {

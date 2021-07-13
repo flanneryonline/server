@@ -2,8 +2,6 @@
 
 exec 2> >(logger -s -t $(basename $0))
 
-set -e
-
 name=$1
 
 [ $name = "" ] && echo "Must provide name of container or '-a' for all containers." && exit 0
