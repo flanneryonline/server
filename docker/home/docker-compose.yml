@@ -50,6 +50,30 @@ services:
             - /mnt/camera/@Snapshot/:/usr/share/nginx/html:ro
         image: nginx
 
+    samba:
+        container_name: samba
+        restart: always
+        networks:
+            - samba
+        ports:
+            - 139:139
+            - 445:445
+        environment:
+            - TZ=$SERVER_TIMEZONE
+        volumes:
+            - $STORAGE_CONFIG_DIR:/mnt/configs
+            - $STORAGE_DOWNLOAD_DIR:/mnt/downloads
+            - $STORAGE_MEDIA_DIR:/mnt/media
+            - $STORAGE_SHARE_DIR:/mnt/shares
+        image: dperson/samba
+        command:
+            - -r
+            - -n
+            - -s "configs;/mnt/configs;yes;no"
+            - -s "downloads;/mnt/downloads;yes;no"
+            - -s "media;/mnt/media;yes;no"
+            - -s "shares;/mnt/shares;yes;no"
+
 volumes:
     localstorage:
 
@@ -61,5 +85,6 @@ secrets:
 
 networks:
     camera:
+    samba:
     proxy:
         external: true
