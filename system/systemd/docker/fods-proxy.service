@@ -11,4 +11,3 @@ ExecReload=/opt/server/bin/service-scripts/fods-proxy
 
 [Install]
 WantedBy=multi-user.target
-

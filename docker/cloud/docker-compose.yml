@@ -37,8 +37,8 @@ services:
             - NEXTCLOUD_ADMIN_USER=$ADMIN_USERNAME
             - NEXTCLOUD_TRUSTED_DOMAINS=hostserver.$SERVER_DOMAIN:8077 cloud.$SERVER_DOMAIN
             - APACHE_DISABLE_REWRITE_IP=1
-            - TRUSTED_PROXIES=hostserver.$SERVER_DOMAIN
-            #- OVERWRITEHOST=cloud.$SERVER_DOMAIN
+            - TRUSTED_PROXIES=proxy.$SERVER_DOMAIN
+            - OVERWRITEHOST=cloud.$SERVER_DOMAIN
             - OVERWRITEPROTOCOL=https
         labels:
             - "traefik.enable=true"
@@ -53,21 +53,6 @@ services:
             - "traefik.http.routers.cloud-secure.service=cloud"
             - "traefik.http.routers.cloud-secure.tls=true"
             - "traefik.http.routers.cloud-secure.tls.certresolver=leresolver"
-            #calendar
-            # - "traefik.http.routers.cloud-cal-login.entryPoints=websecure"
-            # - "traefik.http.routers.cloud-cal-login.rule=Host(`calendar.$SERVER_DOMAIN`) && Path(`/login`)"
-            # - "traefik.http.routers.cloud-cal.middlewares=nextcloud@file"
-            # - "traefik.http.routers.cloud-cal-login.priority=100"
-            # - "traefik.http.routers.cloud-cal-login.service=cloud"
-            # - "traefik.http.routers.cloud-cal-login.tls=true"
-            # - "traefik.http.routers.cloud-cal-login.tls.certresolver=leresolver"
-
-            # - "traefik.http.routers.cloud-cal.entryPoints=websecure"
-            # - "traefik.http.routers.cloud-cal.rule=Host(`calendar.$SERVER_DOMAIN`)"
-            # - "traefik.http.routers.cloud-cal.middlewares=nextcloud@file, nextcloud-cal@file"
-            # - "traefik.http.routers.cloud-cal.service=cloud"
-            # - "traefik.http.routers.cloud-cal.tls=true"
-            # - "traefik.http.routers.cloud-cal.tls.certresolver=leresolver"
         image: nextcloud
         depends_on:
             - nextcloud_db
@@ -79,7 +64,7 @@ services:
         environment:
             - SIGNUPS_ALLOWED=false
             - INVITATIONS_ALLOWED=false
-            - 'DOMAIN=https://password.$SERVER_DOMAIN'
+            - DOMAIN=https://password.$SERVER_DOMAIN
             - WEB_VAULT_FOLDER=/data/web
         volumes:
             - '$STORAGE_CONFIG_DIR/bitwarden:/data'
