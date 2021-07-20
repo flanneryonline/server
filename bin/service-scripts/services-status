@@ -15,10 +15,13 @@ do
             echo -e "  $service_name: \e[33m▲ Not Started\e[0m"
             end="FAIL"
         else
-            state=$(docker inspect $service --format '{{ .State.Health.Status }}')
+            state=$(docker inspect $service --format '{{ .State.Health.Status }}') >/dev/null 2>&1
             if [ $? = 1 ]; then
-                echo -e "  $service_name: \e[33m▲ Unknown\e[0m"
-                end="FAIL"
+                state=$(docker inspect $service --format '{{ .State.Status }}') >/dev/null 2>&1
+                if [ -z $state ] || [ "$state" != "running" ]; then
+                    echo -e "  $service_name: \e[31m▲ Failed\e[0m"
+                    end="FAIL"
+                fi
             else
                 if [ -z $state ] || [ "$state" != "healthy" ]; then
                     echo -e "  $service_name: \e[31m▲ Failed\e[0m"
