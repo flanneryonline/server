@@ -3,7 +3,7 @@ version: '3.2'
 services:
     nextcloud_db:
         container_name: nextcloud_db
-        restart: always
+        restart: unless-stopped
         networks:
             - nextcloud
         volumes:
@@ -14,11 +14,11 @@ services:
             - MYSQL_USER=nextcloud
             - MYSQL_PASSWORD=$MYSQL_PASSWORD
         image: mariadb
-        command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+        command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --skip-innodb-read-only-compressed
 
     nextcloud:
         container_name: nextcloud
-        restart: always
+        restart: unless-stopped
         networks:
             - proxy
             - nextcloud
@@ -33,9 +33,6 @@ services:
             - MYSQL_DATABASE=nextcloud
             - MYSQL_USER=nextcloud
             - MYSQL_HOST=nextcloud_db
-            - NEXTCLOUD_ADMIN_PASSWORD=$NEXTCLOUD_ADMIN_PASSWORD
-            - NEXTCLOUD_ADMIN_USER=$ADMIN_USERNAME
-            - NEXTCLOUD_TRUSTED_DOMAINS=hostserver.$SERVER_DOMAIN:8077 cloud.$SERVER_DOMAIN
             - APACHE_DISABLE_REWRITE_IP=1
             - TRUSTED_PROXIES=proxy.$SERVER_DOMAIN
             - OVERWRITEHOST=cloud.$SERVER_DOMAIN
@@ -59,6 +56,7 @@ services:
 
     bitwarden:
         container_name: bitwarden
+        restart: unless-stopped
         networks:
             - proxy
         environment:

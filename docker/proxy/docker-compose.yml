@@ -2,7 +2,7 @@ version: '3.3'
 services:
     proxy:
         container_name: proxy
-        image: traefik
+        restart: unless-stopped
         networks:
             - proxy
         ports:
@@ -24,10 +24,11 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - $SERVER_INSTALL/configs/proxy:/etc/traefik
             - $STORAGE_CONFIG_DIR/traefik/acme.json:/acme.json
+        image: traefik
 
     oauth:
         container_name: oauth
-        image: thomseddon/traefik-forward-auth:latest
+        restart: unless-stopped
         restart: always
         networks:
             - proxy
@@ -50,6 +51,7 @@ services:
             - "traefik.http.routers.oauth.service=oauth"
             - "traefik.http.routers.oauth.tls=true"
             - "traefik.http.routers.oauth.tls.certresolver=leresolver"
+        image: thomseddon/traefik-forward-auth
 
 networks:
     proxy:

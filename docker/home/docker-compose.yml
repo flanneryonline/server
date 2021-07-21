@@ -3,7 +3,7 @@ services:
 
     camera-trigger:
         container_name: camera-trigger
-        restart: always
+        restart: unless-stopped
         networks:
             - camera
         volumes:
@@ -19,7 +19,7 @@ services:
 
     deepstack-ai:
         container_name: deepstack-ai
-        restart: always
+        restart: unless-stopped
         networks:
             - camera
         volumes:
@@ -30,7 +30,7 @@ services:
 
     screenshots:
         container_name: screenshots
-        restart: always
+        restart: unless-stopped
         networks:
             - proxy
         labels:
@@ -52,7 +52,7 @@ services:
 
     samba:
         container_name: samba
-        restart: always
+        restart: unless-stopped
         networks:
             - samba
         ports:
