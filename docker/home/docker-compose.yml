@@ -20,19 +20,22 @@ services:
     deepstack-ai:
         container_name: deepstack-ai
         restart: unless-stopped
+        runtime: nvidia
         networks:
             - camera
         volumes:
             - localstorage:/datastore
         environment:
             - VISION-DETECTION=True
-        image: deepquestai/deepstack:latest
+        image: deepquestai/deepstack:gpu
 
     screenshots:
         container_name: screenshots
         restart: unless-stopped
         networks:
             - proxy
+        volumes:
+            - /mnt/camera/@Snapshot/:/usr/share/nginx/html:ro
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.camera.loadbalancer.server.port=80"
@@ -46,8 +49,6 @@ services:
             - "traefik.http.routers.camera-secure.service=camera"
             - "traefik.http.routers.camera-secure.tls=true"
             - "traefik.http.routers.camera-secure.tls.certresolver=leresolver"
-        volumes:
-            - /mnt/camera/@Snapshot/:/usr/share/nginx/html:ro
         image: nginx
 
     samba:

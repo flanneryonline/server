@@ -4,6 +4,7 @@ services:
     plex:
         container_name: plex
         restart: unless-stopped
+        runtime: nvidia
         networks:
             - proxy
         ports:
