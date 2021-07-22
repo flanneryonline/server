@@ -13,21 +13,20 @@ services:
         secrets:
             - triggers
             - settings
-        image: danecreekphotography/node-deepstackai-trigger:latest
+        image: danecreekphotography/node-deepstackai-trigger
         depends_on:
             - deepstack-ai
 
     deepstack-ai:
         container_name: deepstack-ai
         restart: unless-stopped
-        runtime: nvidia
         networks:
             - camera
         volumes:
             - localstorage:/datastore
         environment:
             - VISION-DETECTION=True
-        image: deepquestai/deepstack:gpu
+        image: deepquestai/deepstack
 
     screenshots:
         container_name: screenshots
