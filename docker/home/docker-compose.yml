@@ -13,21 +13,18 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_INSTALL/configs/camera/frigate.yaml:/config/config.yml:ro
-      - $STORAGE_CONFIG_DIR/camera/frigate.db:/frigate.db
-      - $CAMERA_MOUNT_LOCATION/:/media/frigate
+      - $STORAGE_CONFIG_DIR/camera/:/media/frigate
     tmpfs: /tmp/cache
     ports:
       - "5000:5000"
       - "1935:1935"
     environment:
-      FRIGATE_MQTT_HOST: homeassistant.$SERVER_DOMAIN
-      FRIGATE_MQTT_USER: $ADMIN_USERNAME
       FRIGATE_MQTT_PASSWORD: $ADMIN_PASSWORD
       FRIGATE_CAMERA_USER: $CAMERA_USER
       FRIGATE_CAMERA_PASSWORD: $ADMIN_PASSWORD
       FRIGATE_PATIO_IP: $PATIO_CAM_IP
-      FRIGATE_GARAGE_IP: $GARAGE_CAM_IP
-      FRIGATE_DOORBELL_IP: $DOORBELL_CAM_IP
+      # FRIGATE_GARAGE_IP: $GARAGE_CAM_IP
+      # FRIGATE_DOORBELL_IP: $DOORBELL_CAM_IP
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.nvr.loadbalancer.server.port=5000"

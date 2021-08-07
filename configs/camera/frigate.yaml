@@ -2,7 +2,7 @@ cameras:
   patio:
     width: 2560
     height: 1920
-    fps: 1
+    fps: 5
     objects:
       track:
         - person
@@ -52,13 +52,25 @@ cameras:
   #           - detect
   #           - rtmp
 
-database:
-  path: /frigate.db
+ffmpeg:
+  input_args:
+    - -avoid_negative_ts
+    - make_zero
+    - -fflags
+    - nobuffer
+    - -flags
+    - low_delay
+    - -strict
+    - experimental
+    - -fflags
+    - +genpts+discardcorrupt
+    - -use_wallclock_as_timestamps
+    - "1"
 
 mqtt:
-  host: '{FRIGATE_MQTT_HOST}'
+  host: homeassistant.flanneryonline.com
   topic_prefix: camera
-  user: '{FRIGATE_MQTT_USER}'
+  user: homeadmin
   password: '{FRIGATE_MQTT_PASSWORD}'
 
 detectors:
