@@ -1,0 +1,65 @@
+cameras:
+  patio:
+    width: 2560
+    height: 1920
+    fps: '{FRIGATE_FPS}'
+    objects:
+      track:
+        - person
+        - cat
+        - dog
+        - mouse
+    zones:
+      patio_couch:
+        coordinates: 738,1164,1288,996,1243,669,1062,505,567,569,580,842
+      deck_stairs:
+        coordinates: 1533,352,2212,1030,1925,1324,1558,1042,1288,431
+      back_door:
+        coordinates: 0,970,0,605,296,550,748,1409,168,1496
+    motion:
+      mask:
+        - 2560,0,2539,1125,1758,850,1829,512,1693,273,1085,307,1296,450,1415,727,748,1409,1569,998,1445,1027,1302,827,1209,893,1249,688,1074,571,582,648,567,825,365,878,279,682,0,631,0,0
+    ffmpeg:
+      inputs:
+        - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_PATIO_IP}:554//h264Preview_01_main
+          roles:
+            - detect
+            - rtmp
+  # garage:
+  #   width: 2560
+  #   height: 1920
+  #   fps: '{FRIGATE_FPS}'
+  #   objects:
+  #     track:
+  #       - person
+  #   ffmpeg:
+  #     inputs:
+  #       - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_GARAGE_IP}:554//h264Preview_01_main
+  #         roles:
+  #           - detect
+  #           - rtmp
+  # doorbell:
+  #   width: 2560
+  #   height: 1920
+  #   fps: '{FRIGATE_FPS}'
+  #   objects:
+  #     track:
+  #       - person
+  #   ffmpeg:
+  #     inputs:
+  #       - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_DOORBELL_IP}:554//h264Preview_01_main
+  #         roles:
+  #           - detect
+  #           - rtmp
+
+mqtt:
+  host: '{FRIGATE_MQTT_HOST}'
+  topic_prefix: camera
+  user: '{FRIGATE_MQTT_USER}'
+  password: '{FRIGATE_MQTT_PASSWORD}'
+
+detectors:
+  cpu1:
+    type: cpu
+  cpu2:
+    type: cpu

@@ -15,12 +15,12 @@ http:
           - rate-limit
           - secure-headers
           - mw-oauth
-    authelia:
-      chain:
-        middlewares:
-          - rate-limit
-          - secure-headers
-          - mw-authelia
+    # authelia:
+    #   chain:
+    #     middlewares:
+    #       - rate-limit
+    #       - secure-headers
+    #       - mw-authelia
     nextcloud:
       chain:
         middlewares:

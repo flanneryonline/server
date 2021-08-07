@@ -1,91 +1,85 @@
 version: "3.8"
 services:
 
-    camera-trigger:
-        container_name: camera-trigger
-        restart: unless-stopped
-        networks:
-            - camera
-        volumes:
-            - /mnt/camera/@Snapshot:/aiinput
-        environment:
-            - TZ=$SERVER_TIMEZONE
-        secrets:
-            - triggers
-            - settings
-        image: danecreekphotography/node-deepstackai-trigger
-        depends_on:
-            - deepstack-ai
+  frigate:
+    container_name: frigate
+    restart: unless-stopped
+    networks:
+      - proxy
+      - camera
+    # #FOR CORAL USB LATER
+    # devices:
+    #   - /dev/bus/usb:/dev/bus/usb
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $SERVER_INSTALL/configs/camera/frigate.yaml:/config/config.yml:ro
+      - $CAMERA_MOUNT_LOCATION/:/media/frigate
+    tmpfs: /tmp/cache
+    ports:
+      - "5000:5000"
+      - "1935:1935"
+    environment:
+      FRIGATE_FPS: 1
+      FRIGATE_MQTT_HOST: homeassistant.$SERVER_DOMAIN
+      FRIGATE_MQTT_USER: $ADMIN_USERNAME
+      FRIGATE_MQTT_PASSWORD: $ADMIN_PASSWORD
+      FRIGATE_CAMERA_USER: $CAMERA_USER
+      FRIGATE_CAMERA_PASSWORD: $ADMIN_PASSWORD
+      FRIGATE_PATIO_IP: $PATIO_CAM_IP
+      FRIGATE_GARAGE_IP: $GARAGE_CAM_IP
+      FRIGATE_DOORBELL_IP: $DOORBELL_CAM_IP
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.nvr.loadbalancer.server.port=5000"
+      - "traefik.http.routers.nvr.service=nvr"
+      #redirect
+      - "traefik.http.routers.nvr.entryPoints=web"
+      - "traefik.http.routers.nvr.rule=Host(`nvr.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.nvr.middlewares=https-redirect@file"
+      #Main
+      - "traefik.http.routers.nvr-secure.entryPoints=websecure"
+      - "traefik.http.routers.nvr-secure.rule=Host(`nvr.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.nvr-secure.middlewares=oauth@file"
+      - "traefik.http.routers.nvr-secure.tls=true"
+      - "traefik.http.routers.nvr-secure.tls.certresolver=leresolver"
+    image: blakeblackshear/frigate
 
-    deepstack-ai:
-        container_name: deepstack-ai
-        restart: unless-stopped
-        networks:
-            - camera
-        volumes:
-            - localstorage:/datastore
-        environment:
-            - VISION-DETECTION=True
-        image: deepquestai/deepstack
-
-    screenshots:
-        container_name: screenshots
-        restart: unless-stopped
-        networks:
-            - proxy
-        volumes:
-            - /mnt/camera/@Snapshot/:/usr/share/nginx/html:ro
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.services.camera.loadbalancer.server.port=80"
-            - "traefik.http.routers.camera.entryPoints=web"
-            - "traefik.http.routers.camera-secure.entryPoints=websecure"
-            - "traefik.http.routers.camera.rule=Host(`camera.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.camera-secure.rule=Host(`camera.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.camera.middlewares=https-redirect@file"
-            - "traefik.http.routers.camera-secure.middlewares=internal-auth@file"
-            - "traefik.http.routers.camera.service=camera"
-            - "traefik.http.routers.camera-secure.service=camera"
-            - "traefik.http.routers.camera-secure.tls=true"
-            - "traefik.http.routers.camera-secure.tls.certresolver=leresolver"
-        image: nginx
-
-    samba:
-        container_name: samba
-        restart: unless-stopped
-        networks:
-            - samba
-        ports:
-            - 137:137/udp
-            - 138:138/udp
-            - 139:139
-            - 445:445
-        environment:
-            - TZ=$SERVER_TIMEZONE
-            - SHARE1=configs;/mnt/configs;yes;no
-            - SHARE2=downloads;/mnt/downloads;yes;no
-            - SHARE3=media;/mnt/media;yes;no
-            - SHARE4=shares;/mnt/shares;yes;no
-            - NMBD=yes
-            - RECYCLE=disabled
-        volumes:
-            - $STORAGE_CONFIG_DIR:/mnt/configs
-            - $STORAGE_DOWNLOAD_DIR:/mnt/downloads
-            - $STORAGE_MEDIA_DIR:/mnt/media
-            - $STORAGE_SHARE_DIR:/mnt/shares
-        image: dperson/samba
+  samba:
+    container_name: samba
+    restart: unless-stopped
+    networks:
+      - samba
+    ports:
+      - 137:137/udp
+      - 138:138/udp
+      - 139:139
+      - 445:445
+    environment:
+      - TZ=$SERVER_TIMEZONE
+      - SHARE1=configs;/mnt/configs;yes;no
+      - SHARE2=downloads;/mnt/downloads;yes;no
+      - SHARE3=media;/mnt/media;yes;no
+      - SHARE4=shares;/mnt/shares;yes;no
+      - NMBD=yes
+      - RECYCLE=disabled
+    volumes:
+      - $STORAGE_CONFIG_DIR:/mnt/configs
+      - $STORAGE_DOWNLOAD_DIR:/mnt/downloads
+      - $STORAGE_MEDIA_DIR:/mnt/media
+      - $STORAGE_SHARE_DIR:/mnt/shares
+    image: dperson/samba
 
 volumes:
     localstorage:
 
 secrets:
-    settings:
-        file: $SERVER_INSTALL/configs/camera/settings.json
-    triggers:
-        file: $SERVER_INSTALL/configs/camera/triggers.json
+  settings:
+    file: $SERVER_INSTALL/configs/camera/settings.json
+  triggers:
+    file: $SERVER_INSTALL/configs/camera/triggers.json
 
 networks:
-    camera:
-    samba:
-    proxy:
-        external: true
+  camera:
+  samba:
+  proxy:
+    external: true

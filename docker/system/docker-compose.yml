@@ -1,69 +1,69 @@
 version: '3.3'
 services:
-    unifi:
-        container_name: unifi
-        healthcheck:
-            test: curl --max-time 5 -kILsf https://localhost:8443 >/dev/null
-            interval: 5s
-            timeout: 5s
-            start_period: 5s
-        restart: unless-stopped
-        networks:
-            - proxy
-        ports:
-            - '8080:8080'
-            - '8081:8081'
-            - '8880:8880'
-            - '8843:8843'
-            - '3478:3478/udp'
-            - '10001:10001/udp'
-        environment:
-            - PUID=$DOCKER_PUID
-            - PGID=$DOCKER_PGID
-        volumes:
-            - '$STORAGE_CONFIG_DIR/unifi:/config'
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.services.wifi.loadbalancer.server.port=8443"
-            - "traefik.http.services.wifi.loadbalancer.server.scheme=https"
-            - "traefik.http.routers.wifi.entryPoints=web"
-            - "traefik.http.routers.wifi-secure.entryPoints=websecure"
-            - "traefik.http.routers.wifi.rule=Host(`wifi.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.wifi-secure.rule=Host(`wifi.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.wifi.middlewares=https-redirect@file"
-            - "traefik.http.routers.wifi-secure.middlewares=internal-auth@file"
-            - "traefik.http.routers.wifi.service=wifi"
-            - "traefik.http.routers.wifi-secure.service=wifi"
-            - "traefik.http.routers.wifi-secure.tls=true"
-            - "traefik.http.routers.wifi-secure.tls.certresolver=leresolver"
-        image: linuxserver/unifi-controller
+  unifi:
+    container_name: unifi
+    healthcheck:
+      test: curl --max-time 5 -kILsf https://localhost:8443 >/dev/null
+      interval: 5s
+      timeout: 5s
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - proxy
+    ports:
+      - '8080:8080'
+      - '8081:8081'
+      - '8880:8880'
+      - '8843:8843'
+      - '3478:3478/udp'
+      - '10001:10001/udp'
+    environment:
+      - PUID=$DOCKER_PUID
+      - PGID=$DOCKER_PGID
+    volumes:
+      - '$STORAGE_CONFIG_DIR/unifi:/config'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.wifi.loadbalancer.server.port=8443"
+      - "traefik.http.services.wifi.loadbalancer.server.scheme=https"
+      - "traefik.http.routers.wifi.entryPoints=web"
+      - "traefik.http.routers.wifi-secure.entryPoints=websecure"
+      - "traefik.http.routers.wifi.rule=Host(`wifi.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.wifi-secure.rule=Host(`wifi.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.wifi.middlewares=https-redirect@file"
+      - "traefik.http.routers.wifi-secure.middlewares=internal-auth@file"
+      - "traefik.http.routers.wifi.service=wifi"
+      - "traefik.http.routers.wifi-secure.service=wifi"
+      - "traefik.http.routers.wifi-secure.tls=true"
+      - "traefik.http.routers.wifi-secure.tls.certresolver=leresolver"
+    image: linuxserver/unifi-controller
 
-    portainer:
-        container_name: portainer
-        restart: unless-stopped
-        networks:
-            - proxy
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock:ro
-            - $STORAGE_CONFIG_DIR/portainer:/data
-        environment:
-            - TZ=$SERVER_TIMEZONE
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.services.container.loadbalancer.server.port=9000"
-            - "traefik.http.routers.container.entryPoints=web"
-            - "traefik.http.routers.container-secure.entryPoints=websecure"
-            - "traefik.http.routers.container.rule=Host(`container.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.container-secure.rule=Host(`container.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.container.middlewares=https-redirect@file"
-            - "traefik.http.routers.container-secure.middlewares=oauth@file"
-            - "traefik.http.routers.container.service=container"
-            - "traefik.http.routers.container-secure.service=container"
-            - "traefik.http.routers.container-secure.tls=true"
-            - "traefik.http.routers.container-secure.tls.certresolver=leresolver"
-        image: portainer/portainer-ce:latest
-        command: -H unix:///var/run/docker.sock
+  portainer:
+      container_name: portainer
+      restart: unless-stopped
+      networks:
+        - proxy
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+        - $STORAGE_CONFIG_DIR/portainer:/data
+      environment:
+        - TZ=$SERVER_TIMEZONE
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.container.loadbalancer.server.port=9000"
+        - "traefik.http.routers.container.entryPoints=web"
+        - "traefik.http.routers.container-secure.entryPoints=websecure"
+        - "traefik.http.routers.container.rule=Host(`container.$SERVER_DOMAIN`)"
+        - "traefik.http.routers.container-secure.rule=Host(`container.$SERVER_DOMAIN`)"
+        - "traefik.http.routers.container.middlewares=https-redirect@file"
+        - "traefik.http.routers.container-secure.middlewares=oauth@file"
+        - "traefik.http.routers.container.service=container"
+        - "traefik.http.routers.container-secure.service=container"
+        - "traefik.http.routers.container-secure.tls=true"
+        - "traefik.http.routers.container-secure.tls.certresolver=leresolver"
+      image: portainer/portainer-ce:latest
+      command: -H unix:///var/run/docker.sock
 
 networks:
-    proxy:
-        external: true
+  proxy:
+    external: true

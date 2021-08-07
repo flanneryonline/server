@@ -1,87 +1,87 @@
 version: '3.2'
 
 services:
-    nextcloud_db:
-        container_name: nextcloud_db
-        restart: unless-stopped
-        networks:
-            - nextcloud
-        volumes:
-            - $STORAGE_CONFIG_DIR/nextcloud_db:/var/lib/mysql
-        environment:
-            - MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD
-            - MYSQL_DATABASE=nextcloud
-            - MYSQL_USER=nextcloud
-            - MYSQL_PASSWORD=$MYSQL_PASSWORD
-        image: mariadb
-        command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --skip-innodb-read-only-compressed
+  nextcloud_db:
+    container_name: nextcloud_db
+    restart: unless-stopped
+    networks:
+      - nextcloud
+    volumes:
+      - $STORAGE_CONFIG_DIR/nextcloud_db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=$ADMIN_PASSWORD
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=$ADMIN_PASSWORD
+    image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --skip-innodb-read-only-compressed
 
-    nextcloud:
-        container_name: nextcloud
-        restart: unless-stopped
-        networks:
-            - proxy
-            - nextcloud
-        volumes:
-            - $STORAGE_CONFIG_DIR/nextcloud:/var/www/html
-            - $STORAGE_DOWNLOAD_DIR:/var/www/html/data/download
-            - $STORAGE_MEDIA_DIR:/var/www/html/data/media
-            - $STORAGE_CONFIG_DIR:/var/www/html/data/configs
-            - $STORAGE_SHARE_DIR:/var/www/html/data/share
-        environment:
-            - MYSQL_PASSWORD=$MYSQL_PASSWORD
-            - MYSQL_DATABASE=nextcloud
-            - MYSQL_USER=nextcloud
-            - MYSQL_HOST=nextcloud_db
-            - APACHE_DISABLE_REWRITE_IP=1
-            - TRUSTED_PROXIES=proxy.$SERVER_DOMAIN
-            - OVERWRITEHOST=cloud.$SERVER_DOMAIN
-            - OVERWRITEPROTOCOL=https
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.services.cloud.loadbalancer.server.port=80"
-            - "traefik.http.routers.cloud.entryPoints=web"
-            - "traefik.http.routers.cloud-secure.entryPoints=websecure"
-            - "traefik.http.routers.cloud.rule=Host(`cloud.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.cloud-secure.rule=Host(`cloud.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.cloud.middlewares=https-redirect@file"
-            - "traefik.http.routers.cloud-secure.middlewares=nextcloud@file"
-            - "traefik.http.routers.cloud.service=cloud"
-            - "traefik.http.routers.cloud-secure.service=cloud"
-            - "traefik.http.routers.cloud-secure.tls=true"
-            - "traefik.http.routers.cloud-secure.tls.certresolver=leresolver"
-        image: nextcloud
-        depends_on:
-            - nextcloud_db
+  nextcloud:
+    container_name: nextcloud
+    restart: unless-stopped
+    networks:
+      - proxy
+      - nextcloud
+    volumes:
+      - $STORAGE_CONFIG_DIR/nextcloud:/var/www/html
+      - $STORAGE_DOWNLOAD_DIR:/var/www/html/data/download
+      - $STORAGE_MEDIA_DIR:/var/www/html/data/media
+      - $STORAGE_CONFIG_DIR:/var/www/html/data/configs
+      - $STORAGE_SHARE_DIR:/var/www/html/data/share
+    environment:
+      - MYSQL_PASSWORD=$ADMIN_PASSWORD
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=nextcloud_db
+      - APACHE_DISABLE_REWRITE_IP=1
+      - TRUSTED_PROXIES=proxy.$SERVER_DOMAIN
+      - OVERWRITEHOST=cloud.$SERVER_DOMAIN
+      - OVERWRITEPROTOCOL=https
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.cloud.loadbalancer.server.port=80"
+      - "traefik.http.routers.cloud.entryPoints=web"
+      - "traefik.http.routers.cloud-secure.entryPoints=websecure"
+      - "traefik.http.routers.cloud.rule=Host(`cloud.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.cloud-secure.rule=Host(`cloud.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.cloud.middlewares=https-redirect@file"
+      - "traefik.http.routers.cloud-secure.middlewares=nextcloud@file"
+      - "traefik.http.routers.cloud.service=cloud"
+      - "traefik.http.routers.cloud-secure.service=cloud"
+      - "traefik.http.routers.cloud-secure.tls=true"
+      - "traefik.http.routers.cloud-secure.tls.certresolver=leresolver"
+    image: nextcloud
+    depends_on:
+      - nextcloud_db
 
-    bitwarden:
-        container_name: bitwarden
-        restart: unless-stopped
-        networks:
-            - proxy
-        environment:
-            - SIGNUPS_ALLOWED=false
-            - INVITATIONS_ALLOWED=false
-            - DOMAIN=https://password.$SERVER_DOMAIN
-            - WEB_VAULT_FOLDER=/data/web
-        volumes:
-            - '$STORAGE_CONFIG_DIR/bitwarden:/data'
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.services.password.loadbalancer.server.port=80"
-            - "traefik.http.routers.password.entryPoints=web"
-            - "traefik.http.routers.password-secure.entryPoints=websecure"
-            - "traefik.http.routers.password.rule=Host(`password.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.password-secure.rule=Host(`password.$SERVER_DOMAIN`)"
-            - "traefik.http.routers.password.middlewares=https-redirect@file"
-            - "traefik.http.routers.password-secure.middlewares=internal-auth@file"
-            - "traefik.http.routers.password.service=password"
-            - "traefik.http.routers.password-secure.service=password"
-            - "traefik.http.routers.password-secure.tls=true"
-            - "traefik.http.routers.password-secure.tls.certresolver=leresolver"
-        image: vaultwarden/server
+  bitwarden:
+    container_name: bitwarden
+    restart: unless-stopped
+    networks:
+      - proxy
+    environment:
+      - SIGNUPS_ALLOWED=false
+      - INVITATIONS_ALLOWED=false
+      - DOMAIN=https://password.$SERVER_DOMAIN
+      - WEB_VAULT_FOLDER=/data/web
+    volumes:
+      - '$STORAGE_CONFIG_DIR/bitwarden:/data'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.password.loadbalancer.server.port=80"
+      - "traefik.http.routers.password.entryPoints=web"
+      - "traefik.http.routers.password-secure.entryPoints=websecure"
+      - "traefik.http.routers.password.rule=Host(`password.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.password-secure.rule=Host(`password.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.password.middlewares=https-redirect@file"
+      - "traefik.http.routers.password-secure.middlewares=internal-auth@file"
+      - "traefik.http.routers.password.service=password"
+      - "traefik.http.routers.password-secure.service=password"
+      - "traefik.http.routers.password-secure.tls=true"
+      - "traefik.http.routers.password-secure.tls.certresolver=leresolver"
+    image: vaultwarden/server
 
 networks:
-    nextcloud:
-    proxy:
-        external: true
+  nextcloud:
+  proxy:
+    external: true
