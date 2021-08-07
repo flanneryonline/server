@@ -2,7 +2,7 @@ cameras:
   patio:
     width: 2560
     height: 1920
-    fps: '{FRIGATE_FPS}'
+    fps: 1
     objects:
       track:
         - person
@@ -51,6 +51,9 @@ cameras:
   #         roles:
   #           - detect
   #           - rtmp
+
+database:
+  path: /frigate.db
 
 mqtt:
   host: '{FRIGATE_MQTT_HOST}'
