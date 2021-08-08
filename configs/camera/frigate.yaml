@@ -14,7 +14,7 @@ cameras:
         objects:
           person: 14
     clips:
-      enable: true
+      enabled: true
       required_zones:
         - deck_stairs
         - back_door
@@ -48,7 +48,26 @@ cameras:
   # garage:
   #   width: 2560
   #   height: 1920
-  #   fps: '{FRIGATE_FPS}'
+  #   fps: 5
+  #   snapshots:
+  #     enabled: true
+  #     bounding_box: true
+  #     required_zones:
+  #       - deck_stairs
+  #       - back_door
+  #     retain:
+  #       default: 2
+  #       objects:
+  #         person: 14
+  #   clips:
+  #     enabled: true
+  #     required_zones:
+  #       - deck_stairs
+  #       - back_door
+  #     retain:
+  #       default: 2
+  #       objects:
+  #         person: 14
   #   objects:
   #     track:
   #       - person
@@ -56,12 +75,32 @@ cameras:
   #     inputs:
   #       - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_GARAGE_IP}:554//h264Preview_01_main
   #         roles:
-  #           - detect
-  #           - rtmp
+  #          - clips
+  #          - detect
+  #          - rtmp
   # doorbell:
   #   width: 2560
   #   height: 1920
-  #   fps: '{FRIGATE_FPS}'
+  #   fps: 5
+  #   snapshots:
+  #     enabled: true
+  #     bounding_box: true
+  #     required_zones:
+  #       - deck_stairs
+  #       - back_door
+  #     retain:
+  #       default: 2
+  #       objects:
+  #         person: 14
+  #   clips:
+  #     enabled: true
+  #     required_zones:
+  #       - deck_stairs
+  #       - back_door
+  #     retain:
+  #       default: 2
+  #       objects:
+  #         person: 14
   #   objects:
   #     track:
   #       - person
@@ -69,8 +108,9 @@ cameras:
   #     inputs:
   #       - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_DOORBELL_IP}:554//h264Preview_01_main
   #         roles:
-  #           - detect
-  #           - rtmp
+  #          - clips
+  #          - detect
+  #          - rtmp
 
 ffmpeg:
   input_args:
