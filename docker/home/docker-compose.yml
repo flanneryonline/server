@@ -27,7 +27,7 @@ services:
       - "traefik.tcp.services.rtmp.loadbalancer.server.port=1935"
       - "traefik.tcp.routers.rtmp.service=rtmp"
       - "traefik.tcp.routers.rtmp.entryPoints=rtmp"
-      - "traefik.tcp.routers.rtmp.rule=Host(`nvr.$SERVER_DOMAIN`)"
+      - "traefik.tcp.routers.rtmp.rule=HostSNI(`*`)"
       - "traefik.http.services.nvr.loadbalancer.server.port=5000"
       - "traefik.http.routers.nvr-local.service=nvr"
       - "traefik.http.routers.nvr-local.entryPoints=web"
