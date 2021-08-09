@@ -2,7 +2,9 @@ cameras:
   patio:
     width: 640
     height: 480
-    fps: 5
+    record:
+      enabled: true
+      retain_days: 7
     snapshots:
       enabled: true
       bounding_box: true
@@ -45,15 +47,17 @@ cameras:
         - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_PATIO_IP}:554//h264Preview_01_main
           roles:
             - clips
-            - record
         - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_PATIO_IP}:554//h264Preview_01_sub
           roles:
+            - record
             - rtmp
             - detect
   garage:
     width: 640
     height: 480
-    fps: 5
+    record:
+      enabled: true
+      retain_days: 7
     snapshots:
       enabled: true
       bounding_box: true
@@ -95,11 +99,11 @@ cameras:
         - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_GARAGE_IP}:554//h264Preview_01_main
           roles:
            - clips
-           - record
         - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_GARAGE_IP}:554//h264Preview_01_sub
           roles:
            - detect
            - rtmp
+           - record
   # doorbell:
   #   width: 640
   #   height: 480
