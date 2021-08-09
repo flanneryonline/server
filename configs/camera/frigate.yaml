@@ -93,7 +93,7 @@ cameras:
     motion:
       mask:
         - 463,0,640,0,640,98
-        - 67,120,300,113,416,480,74,480
+        - 65,49,296,34,640,281,416,480,74,480
     ffmpeg:
       inputs:
         - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_GARAGE_IP}:554//h264Preview_01_main
