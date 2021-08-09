@@ -6,7 +6,6 @@ services:
     restart: unless-stopped
     networks:
       - proxy
-      - camera
     # #FOR CORAL USB LATER
     # devices:
     #   - /dev/bus/usb:/dev/bus/usb
@@ -15,9 +14,7 @@ services:
       - $SERVER_INSTALL/configs/camera/frigate.yaml:/config/config.yml:ro
       - $STORAGE_CONFIG_DIR/camera/:/media/frigate
     tmpfs: /tmp/cache
-    ports:
-      - "5000:5000"
-      - "1935:1935"
+    shm_size: 512mb
     environment:
       FRIGATE_MQTT_PASSWORD: $ADMIN_PASSWORD
       FRIGATE_CAMERA_USER: $CAMERA_USER
@@ -27,7 +24,14 @@ services:
       # FRIGATE_DOORBELL_IP: $DOORBELL_CAM_IP
     labels:
       - "traefik.enable=true"
+      - "traefik.tcp.services.rtmp.loadbalancer.server.port=1935"
+      - "traefik.tcp.routers.rtmp.service=rtmp"
+      - "traefik.tcp.routers.rtmp.entryPoints=rtmp"
+      - "traefik.tcp.routers.rtmp.rule=Host(`nvr.$SERVER_DOMAIN`)"
       - "traefik.http.services.nvr.loadbalancer.server.port=5000"
+      - "traefik.http.routers.nvr-local.service=nvr"
+      - "traefik.http.routers.nvr-local.entryPoints=web"
+      - "traefik.http.routers.nvr-local.rule=Host(`camera.$SERVER_DOMAIN`)"
       - "traefik.http.routers.nvr.service=nvr"
       - "traefik.http.routers.nvr.entryPoints=web"
       - "traefik.http.routers.nvr.rule=Host(`nvr.$SERVER_DOMAIN`)"

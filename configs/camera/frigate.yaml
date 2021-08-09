@@ -54,8 +54,9 @@ cameras:
       enabled: true
       bounding_box: true
       required_zones:
-        - deck_stairs
-        - back_door
+        - garage_door
+        - trash_cans
+        - garage_entry
       retain:
         default: 2
         objects:
@@ -63,8 +64,9 @@ cameras:
     clips:
       enabled: true
       required_zones:
-        - deck_stairs
-        - back_door
+        - garage_door
+        - trash_cans
+        - garage_entry
       retain:
         default: 2
         objects:
@@ -72,6 +74,7 @@ cameras:
     objects:
       track:
         - person
+        - dog
     zones:
       garage_door:
         coordinates: 190,1010,246,0,0,0,0,414,0,1019,0,1347,0,1920,285,1920
@@ -99,8 +102,7 @@ cameras:
   #     enabled: true
   #     bounding_box: true
   #     required_zones:
-  #       - deck_stairs
-  #       - back_door
+  #       - front_door
   #     retain:
   #       default: 2
   #       objects:
@@ -108,8 +110,7 @@ cameras:
   #   clips:
   #     enabled: true
   #     required_zones:
-  #       - deck_stairs
-  #       - back_door
+  #       - front_door
   #     retain:
   #       default: 2
   #       objects:
@@ -117,6 +118,13 @@ cameras:
   #   objects:
   #     track:
   #       - person
+  #       - dog
+  #   zones:
+  #     front_door:
+  #       - 0,0,0,1920,2560,1920,2560,0
+  #   motion:
+  #     mask:
+  #       - 1695,1920,1695,1830,835,1830,835,1920
   #   ffmpeg:
   #     inputs:
   #       - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_DOORBELL_IP}:554//h264Preview_01_main
@@ -124,21 +132,6 @@ cameras:
   #          - clips
   #          - detect
   #          - rtmp
-
-ffmpeg:
-  input_args:
-    - -avoid_negative_ts
-    - make_zero
-    - -fflags
-    - nobuffer
-    - -flags
-    - low_delay
-    - -strict
-    - experimental
-    - -fflags
-    - +genpts+discardcorrupt
-    - -use_wallclock_as_timestamps
-    - "1"
 
 mqtt:
   host: homeassistant.flanneryonline.com

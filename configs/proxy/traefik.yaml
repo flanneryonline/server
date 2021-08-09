@@ -3,6 +3,8 @@ global:
   sendAnonymousUsage: false
 
 entryPoints:
+  rtmp:
+    address: ":1935"
   web:
     address: ":80"
   websecure:
