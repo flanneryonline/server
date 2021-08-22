@@ -78,7 +78,6 @@ secrets:
     file: $SERVER_INSTALL/configs/camera/triggers.json
 
 networks:
-  camera:
   samba:
   proxy:
     external: true
