@@ -28,17 +28,15 @@ cameras:
         - dog
         - mouse
     zones:
-      patio_couch:
-        coordinates: 265,108,319,177,328,259,170,298,131,136
-      deck_stairs:
-        coordinates: 500,173,573,269,433,320,367,257,300,76,417,80
       back_door:
-        coordinates: 179,422,67,99,0,111,0,256,85,480
+    coordinates: 603,1296,347,481,0,344,0,732,270,1296
+  deck_stairs:
+    coordinates: 1765,429,1832,669,1619,806,1315,679,1063,193,1538,190
+  patio_couch:
+    coordinates: 979,320,1107,408,1093,555,1163,665,977,729,658,736,518,582,536,365
     motion:
       mask:
-        - 421,480,416,443,198,437,197,480
-        - 0,267,0,480,80,480
-        - 0,0,0,102,187,81,415,71,478,112,640,189,640,0
+        - 710,1280,1560,1280,1560,1210,710,1280
     ffmpeg:
       inputs:
         - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_PATIO_IP}:554//h264Preview_01_main
@@ -76,15 +74,14 @@ cameras:
         - dog
     zones:
       garage_door:
-        coordinates: 81,0,0,0,0,480,87,480
+        coordinates: 357,0,0,0,0,1296,262,1296
       garage_entry:
-        coordinates: 432,128,500,0,583,65,528,181
+        coordinates: 1552,455,1866,77,2080,161,1880,578
       trash_cans:
-        coordinates: 340,0,300,113,451,139,492,49
+        coordinates: 1444,0,1214,251,1407,357,1693,344,1808,156
     motion:
       mask:
-        - 463,0,640,0,640,98
-        - 65,49,296,34,640,281,416,480,74,480
+        - 710,1280,1560,1280,1560,1210,710,1280
     ffmpeg:
       inputs:
         - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_GARAGE_IP}:554//h264Preview_01_main
@@ -123,7 +120,7 @@ cameras:
   #       - 0,0,0,1296,2304,1296,2304,0
   #   motion:
   #     mask:
-  #       - 1695,1296,1695,1830,835,1830,835,1296
+  #       - 710,1280,1560,1280,1560,1210,710,1280
   #   ffmpeg:
   #     inputs:
   #       - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_DOORBELL_IP}:554//h264Preview_01_main
