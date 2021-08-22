@@ -1,7 +1,7 @@
 cameras:
   patio:
-    width: 640
-    height: 480
+    width: 2560
+    height: 1920
     record:
       enabled: true
       retain_days: 7
@@ -48,8 +48,8 @@ cameras:
             - rtmp
             - detect
   garage:
-    width: 640
-    height: 480
+    width: 2560
+    height: 1920
     record:
       enabled: true
       retain_days: 7
@@ -94,8 +94,8 @@ cameras:
            - rtmp
            - record
   # doorbell:
-  #   width: 640
-  #   height: 480
+  #   width: 2560
+  #   height: 1920
   #   fps: 5
   #   snapshots:
   #     enabled: true
