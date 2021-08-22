@@ -1,7 +1,7 @@
 cameras:
   patio:
-    width: 2560
-    height: 1920
+    width: 2304
+    height: 1296
     record:
       enabled: true
       retain_days: 7
@@ -48,8 +48,8 @@ cameras:
             - rtmp
             - detect
   garage:
-    width: 2560
-    height: 1920
+    width: 2304
+    height: 1296
     record:
       enabled: true
       retain_days: 7
@@ -94,8 +94,8 @@ cameras:
            - rtmp
            - record
   # doorbell:
-  #   width: 2560
-  #   height: 1920
+  #   width: 2304
+  #   height: 1296
   #   fps: 5
   #   snapshots:
   #     enabled: true
@@ -120,10 +120,10 @@ cameras:
   #       - dog
   #   zones:
   #     front_door:
-  #       - 0,0,0,1920,2560,1920,2560,0
+  #       - 0,0,0,1296,2304,1296,2304,0
   #   motion:
   #     mask:
-  #       - 1695,1920,1695,1830,835,1830,835,1920
+  #       - 1695,1296,1695,1830,835,1830,835,1296
   #   ffmpeg:
   #     inputs:
   #       - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_DOORBELL_IP}:554//h264Preview_01_main
