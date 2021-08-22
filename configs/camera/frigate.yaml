@@ -36,7 +36,7 @@ cameras:
         coordinates: 979,320,1107,408,1093,555,1163,665,977,729,658,736,518,582,536,365
     motion:
       mask:
-        - 710,1280,1560,1280,1560,1210,710,1280
+        - 710,1280,1560,1280,1560,1210,710,1210
     ffmpeg:
       inputs:
         - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_PATIO_IP}:554//h264Preview_01_main
@@ -81,7 +81,7 @@ cameras:
         coordinates: 1444,0,1214,251,1407,357,1693,344,1808,156
     motion:
       mask:
-        - 710,1280,1560,1280,1560,1210,710,1280
+        - 710,1280,1560,1280,1560,1210,710,1210
     ffmpeg:
       inputs:
         - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_GARAGE_IP}:554//h264Preview_01_main
@@ -120,7 +120,7 @@ cameras:
   #       - 0,0,0,1296,2304,1296,2304,0
   #   motion:
   #     mask:
-  #       - 710,1280,1560,1280,1560,1210,710,1280
+  #       - 710,1280,1560,1280,1560,1210,710,1210
   #   ffmpeg:
   #     inputs:
   #       - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_DOORBELL_IP}:554//h264Preview_01_main
