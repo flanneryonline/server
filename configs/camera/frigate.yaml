@@ -44,8 +44,6 @@ cameras:
         - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_PATIO_IP}:554//h264Preview_01_main
           roles:
             - clips
-        - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_PATIO_IP}:554//h264Preview_01_sub
-          roles:
             - record
             - rtmp
             - detect
@@ -92,8 +90,6 @@ cameras:
         - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_GARAGE_IP}:554//h264Preview_01_main
           roles:
            - clips
-        - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_GARAGE_IP}:554//h264Preview_01_sub
-          roles:
            - detect
            - rtmp
            - record
@@ -134,8 +130,6 @@ cameras:
   #         roles:
   #          - clips
   #          - record
-  #       - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_DOORBELL_IP}:554//h264Preview_01_sub
-  #         roles:
   #          - detect
   #          - rtmp
 
