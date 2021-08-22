@@ -146,7 +146,6 @@ mqtt:
   password: '{FRIGATE_MQTT_PASSWORD}'
 
 detectors:
-  cpu1:
-    type: cpu
-  cpu2:
-    type: cpu
+  coral:
+    type: edgetpu
+    device: usb

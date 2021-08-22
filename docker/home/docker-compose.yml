@@ -6,9 +6,8 @@ services:
     restart: unless-stopped
     networks:
       - proxy
-    # #FOR CORAL USB LATER
-    # devices:
-    #   - /dev/bus/usb:/dev/bus/usb
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_INSTALL/configs/camera/frigate.yaml:/config/config.yml:ro
@@ -21,7 +20,7 @@ services:
       FRIGATE_CAMERA_PASSWORD: $ADMIN_PASSWORD
       FRIGATE_PATIO_IP: $PATIO_CAM_IP
       FRIGATE_GARAGE_IP: $GARAGE_CAM_IP
-      # FRIGATE_DOORBELL_IP: $DOORBELL_CAM_IP
+      FRIGATE_DOORBELL_IP: $DOORBELL_CAM_IP
     labels:
       - "traefik.enable=true"
       - "traefik.tcp.services.rtmp.loadbalancer.server.port=1935"
