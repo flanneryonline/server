@@ -8,9 +8,6 @@ cameras:
     snapshots:
       enabled: true
       bounding_box: true
-      required_zones:
-        - deck_stairs
-        - back_door
       retain:
         default: 2
         objects:
@@ -61,10 +58,6 @@ cameras:
     snapshots:
       enabled: true
       bounding_box: true
-      required_zones:
-        - garage_door
-        - trash_cans
-        - garage_entry
       retain:
         default: 2
         objects:
