@@ -56,6 +56,7 @@ services:
       - SHARE2=downloads;/mnt/downloads;yes;no
       - SHARE3=media;/mnt/media;yes;no
       - SHARE4=shares;/mnt/shares;yes;no
+      - SHARE5=camera;/mnt/camera;yes;no
       - NMBD=yes
       - RECYCLE=disabled
     volumes:
@@ -63,6 +64,7 @@ services:
       - $STORAGE_DOWNLOAD_DIR:/mnt/downloads
       - $STORAGE_MEDIA_DIR:/mnt/media
       - $STORAGE_SHARE_DIR:/mnt/shares
+      - $STORAGE_CAMERA_DIR:/mnt/camera
     image: dperson/samba
 
 volumes:
