@@ -93,14 +93,16 @@ cameras:
   # doorbell:
   #   width: 2304
   #   height: 1296
-  #   fps: 5
+  #   record:
+  #     enabled: true
+  #     retain_days: 1
   #   snapshots:
   #     enabled: true
   #     bounding_box: true
   #     required_zones:
   #       - front_door
   #     retain:
-  #       default: 2
+  #       default: 1
   #       objects:
   #         person: 14
   #   clips:
@@ -108,9 +110,9 @@ cameras:
   #     required_zones:
   #       - front_door
   #     retain:
-  #       default: 2
+  #       default: 1
   #       objects:
-  #         person: 14
+  #         person: 7
   #   objects:
   #     track:
   #       - person
@@ -129,6 +131,19 @@ cameras:
   #          - record
   #          - detect
   #          - rtmp
+
+ffmpeg:
+  input_args:
+    - -avoid_negative_ts
+    - make_zero
+    - -fflags
+    - nobuffer
+    - -flags
+    - low_delay
+    - -strict
+    - experimental
+    - -fflags
+    - +genpts+discardcorrupt
 
 mqtt:
   host: homeassistant.flanneryonline.com
