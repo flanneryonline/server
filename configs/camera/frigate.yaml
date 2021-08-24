@@ -39,7 +39,7 @@ cameras:
         - 710,1280,1560,1280,1560,1210,710,1210
     ffmpeg:
       inputs:
-        - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_PATIO_IP}:554//h264Preview_01_main
+        - path: rtmp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_PATIO_IP}/bcs/channel0_main.bcs?token=sdasdasd&channel=0&stream=0&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
           roles:
             - clips
             - record
@@ -84,7 +84,7 @@ cameras:
         - 710,1280,1560,1280,1560,1210,710,1210
     ffmpeg:
       inputs:
-        - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_GARAGE_IP}:554//h264Preview_01_main
+        - path: rtmp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_GARAGE_IP}/bcs/channel0_main.bcs?token=sdasdasd&channel=0&stream=0&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
           roles:
            - clips
            - detect
@@ -125,7 +125,7 @@ cameras:
   #       - 710,1280,1560,1280,1560,1210,710,1210
   #   ffmpeg:
   #     inputs:
-  #       - path: rtsp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_DOORBELL_IP}:554//h264Preview_01_main
+  #       - path: rtmp://{FRIGATE_CAMERA_USER}:{FRIGATE_CAMERA_PASSWORD}@{FRIGATE_DOORBELL_IP}/bcs/channel0_main.bcs?token=sdasdasd&channel=0&stream=0&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
   #         roles:
   #          - clips
   #          - record
