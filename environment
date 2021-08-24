@@ -6,6 +6,7 @@ STORAGE_CONFIG_DIR=/mnt/configs
 STORAGE_MEDIA_DIR=/mnt/media
 STORAGE_DOWNLOAD_DIR=/mnt/downloads
 STORAGE_SHARE_DIR=/mnt/shares
+STORAGE_CAMERA_DIR=/mnt/camera
 STORAGE_SETTINGS_DIR=/etc/server/settings
 ADMIN_USERNAME=homeadmin
 ADMIN_USER_ID=1000

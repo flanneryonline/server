@@ -11,7 +11,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $SERVER_INSTALL/configs/camera/frigate.yaml:/config/config.yml:ro
-      - $STORAGE_CONFIG_DIR/camera/:/media/frigate
+      - $STORAGE_CAMERA_DIR/:/media/frigate
     tmpfs: /tmp/cache
     shm_size: 512mb
     environment:
