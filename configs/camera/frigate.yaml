@@ -4,12 +4,12 @@ cameras:
     height: 1296
     record:
       enabled: true
-      retain_days: 7
+      retain_days: 1
     snapshots:
       enabled: true
       bounding_box: true
       retain:
-        default: 2
+        default: 1
         objects:
           person: 14
     clips:
@@ -18,9 +18,9 @@ cameras:
         - deck_stairs
         - back_door
       retain:
-        default: 2
+        default: 1
         objects:
-          person: 14
+          person: 7
     objects:
       track:
         - person
@@ -50,12 +50,12 @@ cameras:
     height: 1296
     record:
       enabled: true
-      retain_days: 7
+      retain_days: 1
     snapshots:
       enabled: true
       bounding_box: true
       retain:
-        default: 2
+        default: 1
         objects:
           person: 14
     clips:
@@ -65,9 +65,9 @@ cameras:
         - trash_cans
         - garage_entry
       retain:
-        default: 2
+        default: 1
         objects:
-          person: 14
+          person: 7
     objects:
       track:
         - person
