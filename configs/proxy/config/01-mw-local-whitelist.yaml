@@ -1,0 +1,9 @@
+http:
+  middlewares:
+    local-whitelist:
+      ipwhitelist:
+        sourcerange:
+          - "10.0.0.0/24"
+        ipstrategy:
+          excludedips:
+            - "10.0.0.1"
