@@ -40,7 +40,7 @@ services:
       - URL_PATH=/_oauth
       - COOKIE_DOMAIN=$SERVER_DOMAIN
       - AUTH_HOST=oauth.$SERVER_DOMAIN
-      - WHITELIST=$SERVER_EMAIL
+      - WHITELIST=$SERVER_EMAIL,$WIFE_EMAIL
       - DEFAULT_ACTION=auth
       - DEFAULT_PROVIDER=google
     labels:
