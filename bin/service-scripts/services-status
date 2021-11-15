@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+SERVER_INSTALL=${SERVER_INSTALL:-"/opt/server"}
+. "$SERVER_INSTALL/environment"
+
+echo ""
+echo "Failed Services:"
+end="No services failed!"
+
+for stack in $($SERVER_INSTALL/bin/service-scripts/list-all-services)
+do
+
+    for service in $(docker-compose --project-directory $SERVER_INSTALL/docker/$HOSTNAME/$stack --env-file $SERVER_INSTALL/environment -p $stack ps -q)
+    do
+
+        service_name=$(docker inspect $service --format '{{ index .Config.Labels "com.docker.compose.service"}}') >/dev/null 2>&1
+        if [ $? = 1 ]; then
+            echo -e "  $service_name: \e[33m▲ Not Started\e[0m"
+            end="FAIL"
+        else
+            state=$(docker inspect $service --format '{{ .State.Health.Status }}') >/dev/null 2>&1
+            if [ $? = 1 ]; then
+                state=$(docker inspect $service --format '{{ .State.Status }}') >/dev/null 2>&1
+                if [ -z $state ] || [ "$state" != "running" ]; then
+                    echo -e "  $service_name: \e[31m▲ Failed\e[0m"
+                    end="FAIL"
+                fi
+            else
+                if [ -z $state ] || [ "$state" != "healthy" ]; then
+                    echo -e "  $service_name: \e[31m▲ Failed\e[0m"
+                    end="FAIL"
+                fi
+            fi
+        fi
+    done
+
+done
+if [ "$end" != "FAIL" ]; then
+    echo -e "\e[32m$end\e[0m"
+fi

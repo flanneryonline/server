@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+exec 2> >(logger -s -t $(basename $0))
+
+SERVER_INSTALL=${SERVER_INSTALL:-/opt/server}
+. "$SERVER_INSTALL/environment"
+
+use_sudo=
+if [ $UID -ne 0 ]; then
+    use_sudo="sudo"
+fi
+
+if [ $1 = "-a" ]; then
+    for file in $(ls $SERVER_INSTALL/docker/$HOSTNAME); do
+        echo "Updating $file service."
+        $use_sudo systemctl reload "fods@$file.service"
+    done
+else
+    echo "Updating $1 service."
+    $use_sudo systemctl reload "fods@$1.service"
+fi
+
+exit 0

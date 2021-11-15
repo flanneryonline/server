@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+exec 2> >(logger -s -t $(basename $0))
+
+use_sudo=
+if [ $UID -ne 0 ]; then
+    use_sudo="sudo"
+fi
+
+if [ $1 = "-a" ]; then
+    for file in $(ls /opt/server/docker/$HOSTNAME); do
+        $use_sudo systemctl restart "fods@$file.service"
+    done
+else
+    $use_sudo systemctl restart "fods@$1.service"
+fi
+
+exit 0

@@ -1,0 +1,49 @@
+version: '3.3'
+services:
+
+  unifi:
+    container_name: unifi
+    healthcheck:
+      test: curl --max-time 5 -kILsf https://localhost:8443 >/dev/null
+      interval: 5s
+      timeout: 5s
+      start_period: 5s
+    restart: unless-stopped
+    # networks:
+    #   - proxy
+    #   - wifi
+    ports:
+      - 8080:8080       #Device Communication
+      - 8880:8880       #Guest Redirect
+      - 8843:8843       #Guest Redirect
+      - 8443:8443       #Web UI
+      - 3478:3478/udp   #STUN Port
+      - 10001:10001/udp #AP Discovery
+      - 1900:1900/udp   #discoverable on L2 Netowrks
+      #- 6789:6789       #Mobile Throughput test
+      #- 5514:5514/udp   #Remote Syslog
+    environment:
+      - PUID=$DOCKER_PUID
+      - PGID=$DOCKER_PGID
+    volumes:
+      - '$STORAGE_CONFIG_DIR/unifi:/config'
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.services.wifi.loadbalancer.server.port=8443"
+    #   - "traefik.http.services.wifi.loadbalancer.server.scheme=https"
+    #   - "traefik.http.routers.wifi.entryPoints=web"
+    #   - "traefik.http.routers.wifi-secure.entryPoints=websecure"
+    #   - "traefik.http.routers.wifi.rule=Host(`wifi.$SERVER_DOMAIN`)"
+    #   - "traefik.http.routers.wifi-secure.rule=Host(`wifi.$SERVER_DOMAIN`)"
+    #   - "traefik.http.routers.wifi.middlewares=https-redirect@file"
+    #   - "traefik.http.routers.wifi-secure.middlewares=internal-auth@file"
+    #   - "traefik.http.routers.wifi.service=wifi"
+    #   - "traefik.http.routers.wifi-secure.service=wifi"
+    #   - "traefik.http.routers.wifi-secure.tls=true"
+    #   - "traefik.http.routers.wifi-secure.tls.certresolver=leresolver"
+    image: linuxserver/unifi-controller
+
+# networks:
+#   wifi:
+#   proxy:
+#     external: true

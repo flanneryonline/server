@@ -1,0 +1,36 @@
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        certResolver: leresolver
+        options: default@file
+
+certificatesResolvers:
+  leresolver:
+    acme:
+      #caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      email: pat@flanneryonline.com
+      httpChallenge:
+        entryPoint: web
+
+providers:
+  docker:
+    exposedByDefault: false
+    network: proxy
+    endpoint: unix:///var/run/docker.sock
+  file:
+    directory: /etc/traefik/config
+    watch: true
+
+serversTransport:
+  insecureSkipVerify: true
+
+api:
+  dashboard: true

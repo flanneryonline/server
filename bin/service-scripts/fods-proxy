@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker network inspect proxy || docker network create proxy

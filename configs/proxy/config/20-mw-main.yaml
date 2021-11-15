@@ -1,0 +1,32 @@
+http:
+  middlewares:
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 50
+
+    local-only:
+      chain:
+        middlewares:
+          - rate-limit
+          - local-whitelist
+
+    internal-auth:
+      chain:
+        middlewares:
+          - rate-limit
+          - secure-headers
+
+    oauth:
+      chain:
+        middlewares:
+          - rate-limit
+          - secure-headers
+          - mw-oauth
+
+    nextcloud:
+      chain:
+        middlewares:
+          - rate-limit
+          - nextcloud-secure-headers
+          - nextcloud-redirect

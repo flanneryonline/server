@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+SERVER_INSTALL=${SERVER_INSTALL:-"/opt/server"}
+. "$SERVER_INSTALL/environment"
+
+exec 2> >(logger -s -t $(basename $0))
+
+find $SERVER_INSTALL/docker/$HOSTNAME -maxdepth 1 -type d -printf '%f\n' | grep -v docker/

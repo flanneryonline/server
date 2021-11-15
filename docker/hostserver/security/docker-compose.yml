@@ -1,0 +1,136 @@
+version: "3.8"
+services:
+
+  frigate:
+    container_name: frigate
+    restart: unless-stopped
+    ports:
+      - 1935:1935
+    networks:
+      - proxy
+      - camera
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $SERVER_INSTALL/configs/camera/frigate.yaml:/config/config.yml:ro
+      - $STORAGE_CAMERA_DIR/:/media/frigate
+    tmpfs: /tmp/cache
+    shm_size: 512mb
+    environment:
+      FRIGATE_MQTT_PASSWORD: $ADMIN_PASSWORD
+      FRIGATE_CAMERA_USER: $CAMERA_USER
+      FRIGATE_CAMERA_PASSWORD: $ADMIN_PASSWORD
+      FRIGATE_PATIO_IP: $PATIO_CAM_IP
+      FRIGATE_GARAGE_IP: $GARAGE_CAM_IP
+      FRIGATE_DOORBELL_IP: $DOORBELL_CAM_IP
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.nvr.loadbalancer.server.port=5000"
+      - "traefik.http.routers.nvr-local.service=nvr"
+      - "traefik.http.routers.nvr-local.entryPoints=web"
+      - "traefik.http.routers.nvr-local.rule=Host(`nvr.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.nvr-local.middlewares=local-only@file"
+      - "traefik.http.routers.nvr-secure.entryPoints=websecure"
+      - "traefik.http.routers.nvr-secure.rule=Host(`nvr.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.nvr-secure.middlewares=oauth@file"
+      - "traefik.http.routers.nvr-secure.tls=true"
+      - "traefik.http.routers.nvr-secure.tls.certresolver=leresolver"
+      - "traefik.http.routers.nvr-secure.service=nvr"
+    image: blakeblackshear/frigate:stable-amd64
+
+  # double-take:
+  #   container_name: double-take
+  #   restart: unless-stopped
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - proxy
+  #     - camera
+  #   volumes:
+  #     - $SERVER_INSTALL/configs/camera/doubletake.yml:/.storage/config/config.yml
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.services.face.loadbalancer.server.port=8080"
+  #     - "traefik.http.routers.face-local.service=face"
+  #     - "traefik.http.routers.face-local.entryPoints=web"
+  #     - "traefik.http.routers.face-local.rule=Host(`face.$SERVER_DOMAIN`)"
+  #     - "traefik.http.routers.face-local.middlewares=local-only@file"
+  #     - "traefik.http.routers.face-secure.entryPoints=websecure"
+  #     - "traefik.http.routers.face-secure.rule=Host(`face.$SERVER_DOMAIN`)"
+  #     - "traefik.http.routers.face-secure.middlewares=oauth@file"
+  #     - "traefik.http.routers.face-secure.tls=true"
+  #     - "traefik.http.routers.face-secure.tls.certresolver=leresolver"
+  #     - "traefik.http.routers.face-secure.service=face"
+  #   image: jakowenko/double-take
+
+  # compreface-postgres-db:
+  #   container_name: compreface-postgres-db
+  #   restart: always
+  #   networks:
+  #     - camera
+  #   environment:
+  #     - POSTGRES_USER=doubletake
+  #     - POSTGRES_PASSWORD=$ADMIN_PASSWORD
+  #     - POSTGRES_DB=doubletake
+  #   volumes:
+  #     - $STORAGE_CAMERA_DIR/facedb:/var/lib/postgresql/data
+  #   image: postgres:11.5
+
+  # compreface-admin:
+  #   container_name: compreface-admin
+  #   restart: unless-stopped
+  #   networks:
+  #     - camera
+  #   environment:
+  #     - POSTGRES_USER=doubletake
+  #     - POSTGRES_PASSWORD=$ADMIN_PASSWORD
+  #     - POSTGRES_URL=jdbc:postgresql://compreface-postgres-db:5432/doubletake
+  #     - SPRING_PROFILES_ACTIVE=dev
+  #     - ENABLE_EMAIL_SERVER=false
+  #     - ADMIN_JAVA_OPTS=-Xmx1g
+  #   depends_on:
+  #     - compreface-postgres-db
+  #     - compreface-api
+  #   image: exadel/compreface-admin:0.6.1
+
+  # compreface-api:
+  #   container_name: compreface-api
+  #   restart: unless-stopped
+  #   networks:
+  #     - camera
+  #   depends_on:
+  #     - compreface-postgres-db
+  #   environment:
+  #     - POSTGRES_USER=doubletake
+  #     - POSTGRES_PASSWORD=$ADMIN_PASSWORD
+  #     - POSTGRES_URL=jdbc:postgresql://compreface-postgres-db:5432/doubletake
+  #     - SPRING_PROFILES_ACTIVE=dev
+  #     - API_JAVA_OPTS=-Xmx4g
+  #     - SAVE_IMAGES_TO_DB=true
+  #   image: exadel/compreface-api:0.6.1
+
+  # compreface-fe:
+  #   container_name: compreface-ui
+  #   restart: unless-stopped
+  #   networks:
+  #     - proxy
+  #     - camera
+  #   depends_on:
+  #     - compreface-api
+  #     - compreface-admin
+  #   image: exadel/compreface-fe:0.6.1
+
+  # compreface-core:
+  #   container_name: compreface-core
+  #   restart: unless-stopped
+  #   networks:
+  #     - camera
+  #   environment:
+  #     - ML_PORT=3000
+  #   image: exadel/compreface-core:0.6.1
+
+networks:
+  camera:
+  proxy:
+    external: true

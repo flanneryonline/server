@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+
+  samba:
+    container_name: samba
+    restart: unless-stopped
+    networks:
+      - samba
+    ports:
+      - 137:137/udp
+      - 138:138/udp
+      - 139:139
+      - 445:445
+    environment:
+      - TZ=$SERVER_TIMEZONE
+      - SHARE1=configs;/mnt/configs;yes;no
+      - SHARE2=downloads;/mnt/downloads;yes;no
+      - SHARE3=media;/mnt/media;yes;no
+      - SHARE4=shares;/mnt/shares;yes;no
+      - SHARE5=camera;/mnt/camera;yes;no
+      - NMBD=yes
+      - RECYCLE=disabled
+    volumes:
+      - $STORAGE_CONFIG_DIR:/mnt/configs
+      - $STORAGE_DOWNLOAD_DIR:/mnt/downloads
+      - $STORAGE_MEDIA_DIR:/mnt/media
+      - $STORAGE_SHARE_DIR:/mnt/shares
+      - $STORAGE_CAMERA_DIR:/mnt/camera
+    image: dperson/samba
+
+networks:
+  samba:

@@ -1,0 +1,85 @@
+version: '3.3'
+services:
+
+  proxy:
+    container_name: proxy
+    restart: unless-stopped
+    networks:
+      - proxy
+    ports:
+      - 80:80
+      - 443:443
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.proxy.entryPoints=web"
+      - "traefik.http.routers.proxy-secure.entryPoints=websecure"
+      - "traefik.http.routers.proxy.rule=Host(`proxy.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.proxy-secure.rule=Host(`proxy.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.proxy.middlewares=https-redirect@file"
+      - "traefik.http.routers.proxy-secure.middlewares=oauth@file"
+      - "traefik.http.routers.proxy.service=api@internal"
+      - "traefik.http.routers.proxy-secure.service=api@internal"
+      - "traefik.http.routers.proxy-secure.tls=true"
+      - "traefik.http.routers.proxy-secure.tls.certresolver=leresolver"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $SERVER_INSTALL/configs/proxy:/etc/traefik
+      - $STORAGE_CONFIG_DIR/traefik/acme.json:/acme.json
+    image: traefik
+
+  oauth:
+    container_name: oauth
+    restart: unless-stopped
+    restart: always
+    networks:
+      - proxy
+    environment:
+      - PROVIDERS_GOOGLE_CLIENT_ID=$OAUTH_CLIENT_ID
+      - PROVIDERS_GOOGLE_CLIENT_SECRET=$OAUTH_CLIENT_SECRET
+      - SECRET=$OAUTH_SECRET
+      - URL_PATH=/_oauth
+      - COOKIE_DOMAIN=$SERVER_DOMAIN
+      - AUTH_HOST=oauth.$SERVER_DOMAIN
+      - WHITELIST=$SERVER_EMAIL,$PROXY_EMAILS
+      - DEFAULT_ACTION=auth
+      - DEFAULT_PROVIDER=google
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.oauth.loadbalancer.server.port=4181"
+      - "traefik.http.routers.oauth.entrypoints=websecure"
+      - "traefik.http.routers.oauth.rule=Host(`oauth.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.oauth.middlewares=oauth@file"
+      - "traefik.http.routers.oauth.service=oauth"
+      - "traefik.http.routers.oauth.tls=true"
+      - "traefik.http.routers.oauth.tls.certresolver=leresolver"
+    image: thomseddon/traefik-forward-auth
+
+  portainer:
+      container_name: portainer
+      restart: unless-stopped
+      networks:
+        - proxy
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+        - $STORAGE_CONFIG_DIR/portainer:/data
+      environment:
+        - TZ=$SERVER_TIMEZONE
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.container.loadbalancer.server.port=9000"
+        - "traefik.http.routers.container.entryPoints=web"
+        - "traefik.http.routers.container-secure.entryPoints=websecure"
+        - "traefik.http.routers.container.rule=Host(`container.$SERVER_DOMAIN`)"
+        - "traefik.http.routers.container-secure.rule=Host(`container.$SERVER_DOMAIN`)"
+        - "traefik.http.routers.container.middlewares=https-redirect@file"
+        - "traefik.http.routers.container-secure.middlewares=oauth@file"
+        - "traefik.http.routers.container.service=container"
+        - "traefik.http.routers.container-secure.service=container"
+        - "traefik.http.routers.container-secure.tls=true"
+        - "traefik.http.routers.container-secure.tls.certresolver=leresolver"
+      image: portainer/portainer-ce:latest
+      command: -H unix:///var/run/docker.sock
+
+networks:
+  proxy:
+    external: true

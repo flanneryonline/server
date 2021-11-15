@@ -1,0 +1,13 @@
+[Unit]
+Description=Proxy Network for fods services
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+
+ExecStart=/opt/server/bin/service-scripts/fods-proxy
+ExecStop=
+ExecReload=/opt/server/bin/service-scripts/fods-proxy
+
+[Install]
+WantedBy=multi-user.target

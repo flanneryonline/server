@@ -1,0 +1,23 @@
+http:
+  routers:
+    wifi:
+      entryPoints:
+        - web
+      rule: "Host(`wifi.flanneryonline.com`)"
+      middlewares:
+        - https-redirect
+      service: wifi
+    wifi-secure:
+      entryPoints:
+        - websecure
+      rule: "Host(`wifi.flanneryonline.com`)"
+      middlewares:
+       - internal-auth
+      tls:
+        certResolver: leresolver
+      service: wifi
+  services:
+    wifi:
+      loadBalancer:
+        servers:
+          - url: "https://services.flanneryonline.com:8443"

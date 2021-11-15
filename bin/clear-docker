@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+exec 2> >(logger -s -t $(basename $0))
+
+name=$1
+
+[ $name = "" ] && echo "Must provide name of container or '-a' for all containers." && exit 0
+
+if [ name = "-a" ]
+then
+    docker stop $(docker ps -a -q)
+    docker rm $(docker ps -a -q)
+else
+    id=$(docker ps -q -f name=$name)
+    if [ ! -z "$id" ]
+    then
+        docker stop $id
+    fi
+
+    id=$(docker ps -aq -f name=$name)
+    if [ ! -z "$id" ]
+    then
+        docker rm -f $id
+    fi
+fi
+exit 0

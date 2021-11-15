@@ -1,0 +1,33 @@
+version: '3.3'
+services:
+
+  emby:
+    container_name: emby
+    restart: unless-stopped
+    networks:
+      - proxy
+    environment:
+      - UID=$DOCKER_PUID
+      - GID=$DOCKER_PGID
+    volumes:
+      - '$STORAGE_CONFIG_DIR/emby:/config'
+      - '$STORAGE_MEDIA_DIR:/media'
+    tmpfs: /transcode
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.emby.loadbalancer.server.port=8096"
+      - "traefik.http.routers.emby.entryPoints=web"
+      - "traefik.http.routers.emby-secure.entryPoints=websecure"
+      - "traefik.http.routers.emby.rule=Host(`emby.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.emby-secure.rule=Host(`emby.$SERVER_DOMAIN`)"
+      - "traefik.http.routers.emby.middlewares=https-redirect@file"
+      - "traefik.http.routers.emby-secure.middlewares=internal-auth@file"
+      - "traefik.http.routers.emby.service=emby"
+      - "traefik.http.routers.emby-secure.service=emby"
+      - "traefik.http.routers.emby-secure.tls=true"
+      - "traefik.http.routers.emby-secure.tls.certresolver=leresolver"
+    image: emby/embyserver
+
+networks:
+  proxy:
+    external: true

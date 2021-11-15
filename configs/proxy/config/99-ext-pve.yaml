@@ -1,0 +1,31 @@
+http:
+  routers:
+    pve:
+      entryPoints:
+        - web
+      rule: "host(`pve.flanneryonline.com`)"
+      middlewares:
+        - https-redirect
+      service: pve
+    pve-secure:
+      entryPoints:
+        - websecure
+      rule: "host(`pve.flanneryonline.com`)"
+      middlewares:
+        - pve
+        - internal-auth
+      tls:
+        certResolver: leresolver
+      service: pve
+  services:
+    pve:
+      loadBalancer:
+        servers:
+          - url: "https://host.pve.flanneryonline.com:8006"
+          - url: "https://network.pve.flanneryonline.com:8006"
+          - url: "https://backup.pve.flanneryonline.com:8006"
+  middlewares:
+    pve:
+      headers:
+        customrequestheaders:
+          X-Forwarded-Proto: https

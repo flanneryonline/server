@@ -1,0 +1,13 @@
+[Unit]
+Description=Docker Cleanup Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/usr/bin/docker system prune -af --volumes
+
+[Install]
+WantedBy=fods-media.target

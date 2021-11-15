@@ -1,0 +1,23 @@
+http:
+  routers:
+    home:
+      entryPoints:
+        - web
+      rule: "Host(`home.flanneryonline.com`)"
+      middlewares:
+        - https-redirect
+      service: home
+    home-secure:
+      entryPoints:
+        - websecure
+      rule: "Host(`home.flanneryonline.com`)"
+      middlewares:
+       - internal-auth
+      tls:
+        certResolver: leresolver
+      service: home
+  services:
+    home:
+      loadBalancer:
+        servers:
+          - url: "http://homeassistant.flanneryonline.com:8123"

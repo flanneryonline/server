@@ -1,0 +1,21 @@
+[Unit]
+Description=%i running in Docker
+Wants=fods-proxy.service
+Requires=fods-proxy.service
+After=fods-proxy.service
+
+[Service]
+WorkingDirectory=/opt/server/docker/%H/%i
+Type=oneshot
+RemainAfterExit=yes
+
+ExecStart=/usr/local/bin/docker-compose --env-file /opt/server/environment pull --quiet
+ExecStart=/usr/local/bin/docker-compose --env-file /opt/server/environment down
+ExecStart=/usr/local/bin/docker-compose --env-file /opt/server/environment up -d
+
+ExecStop=/usr/local/bin/docker-compose --env-file /opt/server/environment down
+
+ExecReload=/usr/local/bin/docker-compose --env-file /opt/server/environment up -d
+
+[Install]
+WantedBy=multi-user.target

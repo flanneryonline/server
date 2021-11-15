@@ -1,0 +1,23 @@
+http:
+  routers:
+    plex:
+      entryPoints:
+        - web
+      rule: "Host(`plex.flanneryonline.com`)"
+      middlewares:
+        - https-redirect
+      service: plex
+    plex-secure:
+      entryPoints:
+        - websecure
+      rule: "Host(`plex.flanneryonline.com`)"
+      middlewares:
+       - internal-auth
+      tls:
+        certResolver: leresolver
+      service: plex
+  services:
+    plex:
+      loadBalancer:
+        servers:
+          - url: "http://172.17.0.1:32400"
