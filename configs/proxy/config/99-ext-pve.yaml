@@ -20,6 +20,9 @@ http:
   services:
     pve:
       loadBalancer:
+        sticky:
+          cookie:
+            name: pve
         servers:
           - url: "https://host.pve.flanneryonline.com:8006"
           - url: "https://network.pve.flanneryonline.com:8006"
