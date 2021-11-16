@@ -30,7 +30,6 @@ services:
   oauth:
     container_name: oauth
     restart: unless-stopped
-    restart: always
     networks:
       - proxy
     environment:
