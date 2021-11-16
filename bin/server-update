@@ -33,6 +33,10 @@ then
 fi
 popd >/dev/null
 
+chmod +x $SERVER_INSTALL/bin/*
+chmod +x $SERVER_INSTALL/bin/service-scripts/*
+chmod +x $SERVER_INSTALL/onetimesetup/*
+
 cat $SECRETS_LOCATION >> $SERVER_INSTALL/environment
 
 $SERVER_INSTALL/bin/sdupdate -a
