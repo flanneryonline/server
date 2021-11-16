@@ -25,11 +25,11 @@ fi
 pushd "$SERVER_INSTALL" >/dev/null
 $use_sudo git rev-parse --git-dir >/dev/null 2>&1
 $use_sudo git remote update >/dev/null
-local_rev=$(git rev-parse master)
-server_rev=$(git rev-parse origin/master)
+local_rev=$(git rev-parse main)
+server_rev=$(git rev-parse origin/main)
 if [ "$local_rev" != "$server_rev" ]
 then
-    $use_sudo git reset --hard origin/master >/dev/null
+    $use_sudo git reset --hard origin/main >/dev/null
 fi
 popd >/dev/null
 
