@@ -37,7 +37,7 @@ services:
       - "traefik.http.routers.nvr-secure.tls=true"
       - "traefik.http.routers.nvr-secure.tls.certresolver=leresolver"
       - "traefik.http.routers.nvr-secure.service=nvr"
-    image: blakeblackshear/frigate:stable-amd64
+    image: blakeblackshear/frigate:0.9.3-amd64
 
   # double-take:
   #   container_name: double-take
