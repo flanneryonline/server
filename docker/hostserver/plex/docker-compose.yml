@@ -8,10 +8,10 @@ services:
     environment:
       - PUID=$DOCKER_PUID
       - PGID=$DOCKER_PGID
-      - VERSION=docker
+      - VERSION=latest
       - TZ=$SERVER_TIMEZONE
     volumes:
       - '$STORAGE_CONFIG_DIR/plex:/config'
       - '$STORAGE_MEDIA_DIR:/media'
     tmpfs: /transcode
-    image: ghcr.io/linuxserver/plex
+    image: lscr.io/linuxserver/plex

@@ -41,7 +41,7 @@ services:
       - "traefik.http.routers.wifi-secure.service=wifi"
       - "traefik.http.routers.wifi-secure.tls=true"
       - "traefik.http.routers.wifi-secure.tls.certresolver=leresolver"
-    image: linuxserver/unifi-controller
+    image: lscr.io/linuxserver/unifi-controller
 
 networks:
   wifi:

@@ -1,4 +1,10 @@
 version: "3.8"
+
+networks:
+  camera:
+  proxy:
+    external: true
+
 services:
 
   frigate:
@@ -42,8 +48,8 @@ services:
   # double-take:
   #   container_name: double-take
   #   restart: unless-stopped
-  #   ports:
-  #     - 3000:3000
+  #   # ports:
+  #   #   - 3000:3000
   #   networks:
   #     - proxy
   #     - camera
@@ -129,8 +135,3 @@ services:
   #   environment:
   #     - ML_PORT=3000
   #   image: exadel/compreface-core:0.6.1
-
-networks:
-  camera:
-  proxy:
-    external: true

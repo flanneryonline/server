@@ -31,7 +31,7 @@ services:
       - "traefik.http.routers.nzbdownload-secure.service=nzbdownload"
       - "traefik.http.routers.nzbdownload-secure.tls=true"
       - "traefik.http.routers.nzbdownload-secure.tls.certresolver=leresolver"
-    image: ghcr.io/linuxserver/nzbget
+    image: lscr.io/linuxserver/nzbget
 
   prowlarr:
     container_name: prowlarr
@@ -73,7 +73,7 @@ services:
       - "traefik.http.routers.search-bypass.tls=true"
       - "traefik.http.routers.search-bypass.tls.certresolver=leresolver"
       - "traefik.http.routers.search-bypass.priority=100"
-    image: ghcr.io/linuxserver/prowlarr:develop
+    image: lscr.io/linuxserver/prowlarr:develop
 
   radarr:
     container_name: radarr
@@ -120,7 +120,7 @@ services:
     depends_on:
       - nzbget
       - prowlarr
-    image: ghcr.io/linuxserver/radarr
+    image: lscr.io/linuxserver/radarr
 
   radarr4k:
     container_name: radarr4k
@@ -167,7 +167,7 @@ services:
     depends_on:
       - nzbget
       - prowlarr
-    image: ghcr.io/linuxserver/radarr
+    image: lscr.io/linuxserver/radarr
 
   sonarr:
     container_name: sonarr
@@ -214,7 +214,7 @@ services:
     depends_on:
       - nzbget
       - prowlarr
-    image: ghcr.io/linuxserver/sonarr
+    image: lscr.io/linuxserver/sonarr
 
   sonarr4k:
     container_name: sonarr4k
@@ -261,7 +261,7 @@ services:
     depends_on:
       - nzbget
       - prowlarr
-    image: ghcr.io/linuxserver/sonarr
+    image: lscr.io/linuxserver/sonarr
 
   lidarr:
     container_name: lidarr
@@ -308,7 +308,7 @@ services:
     depends_on:
       - nzbget
       - prowlarr
-    image: ghcr.io/linuxserver/lidarr
+    image: lscr.io/linuxserver/lidarr
 
   bazarr:
     container_name: bazarr
@@ -343,7 +343,7 @@ services:
       - "traefik.http.routers.subs-secure.middlewares=oauth@file"
       - "traefik.http.routers.subs-secure.tls=true"
       - "traefik.http.routers.subs-secure.tls.certresolver=leresolver"
-    image: ghcr.io/linuxserver/bazarr
+    image: lscr.io/linuxserver/bazarr
 
 networks:
   proxy:

@@ -6,8 +6,6 @@ services:
     restart: unless-stopped
     networks:
       - proxy
-    ports:
-      - 80:80
     environment:
       - SIGNUPS_ALLOWED=false
       - INVITATIONS_ALLOWED=false
