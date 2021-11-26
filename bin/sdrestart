@@ -12,11 +12,11 @@ fi
 
 if [ $1 = "-a" ]; then
     for file in $(ls $SERVER_INSTALL/docker/$HOSTNAME); do
-        echo "Updating $file service."
+        echo "Restarting $file service."
         $use_sudo systemctl restart "fods@$file.service"
     done
 else
-    echo "Updating $1 service."
+    echo "Restarting $1 service."
     $use_sudo systemctl restart "fods@$1.service"
 fi
 

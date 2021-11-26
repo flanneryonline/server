@@ -39,6 +39,8 @@ chmod +x $SERVER_INSTALL/onetimesetup/*
 
 cat $SECRETS_LOCATION >> $SERVER_INSTALL/environment
 
+systemctl daemon-reload
+
 $SERVER_INSTALL/bin/sdupdate -a
 
 exit 0
