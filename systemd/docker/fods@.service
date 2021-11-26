@@ -11,11 +11,11 @@ RemainAfterExit=yes
 
 ExecStart=/usr/local/bin/docker-compose --env-file /opt/server/environment pull --quiet
 ExecStart=/usr/local/bin/docker-compose --env-file /opt/server/environment down
-ExecStart=/usr/local/bin/docker-compose --env-file /opt/server/environment up -d
+ExecStart=/usr/local/bin/docker-compose --env-file /opt/server/environment up --force-recreate --remove-orphans -d
 
 ExecStop=/usr/local/bin/docker-compose --env-file /opt/server/environment down
 
-ExecReload=/usr/local/bin/docker-compose --env-file /opt/server/environment up -d
+ExecReload=/usr/local/bin/docker-compose --env-file /opt/server/environment up --remove-orphans -d
 
 [Install]
 WantedBy=multi-user.target
