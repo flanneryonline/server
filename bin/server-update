@@ -4,32 +4,43 @@ exec 2> >(logger -s -t $(basename $0))
 
 export DEBIAN_FRONTEND=noninteractive
 
-use_sudo=
-if [ $UID -ne 0 ]; then
-    use_sudo="sudo"
-fi
-
 SERVER_INSTALL=${SERVER_INSTALL:-/opt/server}
 . "$SERVER_INSTALL/environment"
 
-$use_sudo apt-get update -qq
-$use_sudo apt-get upgrade -qq --no-install-recommends
-$use_sudo apt-get dist-upgrade -qq --no-install-recommends
-$use_sudo apt-get autoremove -qq
+apt-get update -qq
+apt-get upgrade -qq --no-install-recommends
+apt-get dist-upgrade -qq --no-install-recommends
+apt-get autoremove -qq
 
 #server config update
 if [ ! -d "$SERVER_INSTALL" ]
 then
-    $use_sudo git clone "$SERVER_GIT_LOCATION" "$SERVER_INSTALL"
+    git clone "$SERVER_GIT_LOCATION" "$SERVER_INSTALL"
 fi
 pushd "$SERVER_INSTALL" >/dev/null
-$use_sudo git rev-parse --git-dir >/dev/null 2>&1
-$use_sudo git remote update >/dev/null
+git rev-parse --git-dir >/dev/null 2>&1
+git remote update >/dev/null
 local_rev=$(git rev-parse main)
 server_rev=$(git rev-parse origin/main)
 if [ "$local_rev" != "$server_rev" ]
 then
-    $use_sudo git reset --hard origin/main >/dev/null
+    git reset --hard origin/main >/dev/null
+fi
+popd >/dev/null
+
+#dotfiles
+if [ ! -d "/root/dotfiles" ]
+then
+    git clone "$DOTFILE_GIT_LOCATION" "/root/dotfiles"
+fi
+pushd "/root/dotfiles" >/dev/null
+git rev-parse --git-dir >/dev/null 2>&1
+git remote update >/dev/null
+local_rev=$(git rev-parse master)
+server_rev=$(git rev-parse origin/master)
+if [ "$local_rev" != "$server_rev" ]
+then
+    git reset --hard origin/master >/dev/null
 fi
 popd >/dev/null
 
