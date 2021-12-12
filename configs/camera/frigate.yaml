@@ -25,14 +25,7 @@ cameras:
     objects:
       track:
         - person
-        - cat
-        - dog
-        - mouse
-        - bird
-        - horse
-        - sheep
-        - cow
-        - bear
+        - animal
     zones:
       back_door:
         coordinates: 603,1296,347,481,0,344,0,732,270,1296
@@ -77,14 +70,7 @@ cameras:
     objects:
       track:
         - person
-        - cat
-        - dog
-        - mouse
-        - bird
-        - horse
-        - sheep
-        - cow
-        - bear
+        - animal
     zones:
       garage_door:
         coordinates: 357,0,0,0,0,1296,262,1296
@@ -129,14 +115,7 @@ cameras:
     objects:
       track:
         - person
-        - cat
-        - dog
-        - mouse
-        - bird
-        - horse
-        - sheep
-        - cow
-        - bear
+        - animal
     zones:
       front_door:
         coordinates: 0,0,0,1296,2304,1296,2304,0
@@ -150,6 +129,19 @@ cameras:
            - record
            - detect
            - rtmp
+
+model:
+  labelmap:
+    15: animal
+    16: animal
+    17: animal
+    18: animal
+    19: animal
+    20: animal
+    21: animal
+    22: animal
+    23: animal
+    24: animal
 
 ffmpeg:
   hwaccel_args:
